@@ -1,0 +1,59 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SEO Revenue Calculator</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
+        input, button { padding: 8px; margin: 5px 0; width: 100%; }
+        .result { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h2>SEO Revenue Calculator</h2>
+
+    <label>Keyword:</label>
+    <input type="text" id="keyword" placeholder="Enter keyword">
+
+    <label>Monthly Search Volume:</label>
+    <input type="number" id="volume" placeholder="Enter search volume">
+
+    <label>Average Order Value (AOV):</label>
+    <input type="number" id="aov" value="100">
+
+    <label>Conversion Rate (CR) (e.g., 0.04 for 4%):</label>
+    <input type="number" id="cr" value="0.04" step="0.01">
+
+    <button onclick="calculateRevenue()">Calculate</button>
+
+    <div id="output" class="result"></div>
+
+    <script>
+        function calculateRevenue() {
+            const volume = parseFloat(document.getElementById('volume').value);
+            const aov = parseFloat(document.getElementById('aov').value);
+            const cr = parseFloat(document.getElementById('cr').value);
+
+            if (isNaN(volume) || isNaN(aov) || isNaN(cr)) {
+                document.getElementById('output').innerHTML = '<b>Please fill in all fields correctly.</b>';
+                return;
+            }
+
+            const percentages = [0.3, 0.15, 0.1, 0.07, 0.05];
+            let html = '<h3>Results:</h3>';
+
+            percentages.forEach(p => {
+                const traffic = volume * p;
+                const conversions = traffic * cr;
+                const revenue = conversions * aov;
+                html += `<p><b>${(p * 100).toFixed(0)}% visibility:</b><br>
+                        Traffic: ${Math.round(traffic)}<br>
+                        Conversions: ${Math.round(conversions)}<br>
+                        Estimated Revenue: €${Math.round(revenue)}</p>`;
+            });
+
+            document.getElementById('output').innerHTML = html;
+        }
+    </script>
+</body>
+</html>
