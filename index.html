@@ -45,9 +45,10 @@
     }
 
     .container.dark-mode {
-      background-color: rgba(28, 28, 28, 0.97);
-      color: #f1f1f1;
-    }
+    background-color: rgba(34, 34, 34, 0.95);
+    color: #f1f1f1;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  }
 
     input, select, button {
       padding: 10px;
@@ -85,8 +86,8 @@
     }
 
     .dark-mode .result {
-      background: #1c1c1c;
-      border-color: #444;
+      background-color: #1e1e1e;
+      border: 1px solid #444;
     }
 
     .blue-text {
@@ -204,13 +205,16 @@
     }
 
     .dark-mode #revenueChart {
-      background: #1a1a1a;
-      border: 1px solid #333;
+      background-color: #1e1e1e;
+      border: 1px solid #444;
     }
 
     #output, #revenueChart {
       display: none;
     }
+body.dark-mode label {
+  color: #f1f1f1;
+}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
