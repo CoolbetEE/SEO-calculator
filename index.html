@@ -23,7 +23,7 @@
             max-width: 600px;
             width: 100%;
             padding: 20px;
-            margin-top: 20px;
+            margin-top: 40px;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.4);
@@ -42,13 +42,11 @@
         }
 
         input, select, button {
-            padding: 10px;
-            margin: 10px 0;
+            padding: 8px;
+            margin: 5px 0;
             width: 100%;
             max-width: 100%;
             box-sizing: border-box;
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 6px;
             color: inherit;
             background-color: white;
         }
@@ -56,17 +54,15 @@
         .dark-mode input, .dark-mode select, .dark-mode button {
             background-color: #333;
             color: #fff;
-            border: 1px solid #555;
         }
 
         .result {
             margin-top: 20px;
-            padding: 15px;
+            padding: 10px;
             border: 1px solid #ccc;
             text-align: left;
             background: #fff;
-            border-radius: 6px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 5px;
         }
 
         .dark-mode .result {
@@ -74,18 +70,34 @@
             border-color: #444;
         }
 
-        .blue-text {
-            color: #007bff;
+        .tooltip {
             font-weight: bold;
+            cursor: help;
+        }
+
+        .flag {
+            width: 24px;
+            height: 16px;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        #spinner {
+            display: none;
+            margin: 10px auto;
         }
 
         .fade-in {
-            animation: fadeIn 0.6s ease-in-out;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .blue-text {
+            color: #007bff;
         }
 
         @keyframes fadeIn {
-            from {opacity: 0; transform: translateY(10px);}
-            to {opacity: 1; transform: translateY(0);}
+            from {opacity: 0;}
+            to {opacity: 1;}
         }
 
         .toggle-switch {
@@ -93,7 +105,7 @@
             display: inline-block;
             width: 60px;
             height: 34px;
-            margin-left: 12px;
+            margin-left: 10px;
             vertical-align: middle;
         }
 
@@ -128,26 +140,17 @@
             transform: translateX(26px);
         }
 
-        .flag {
-            width: 24px;
-            height: 16px;
-            vertical-align: middle;
-            margin-left: 5px;
-        }
-
         #export-buttons {
-            margin-top: 15px;
-        }
-
-        #spinner {
-            display: none;
-            margin: 10px auto;
+            margin-top: 10px;
         }
 
         @media (max-width: 600px) {
             .container {
-                padding: 12px;
-                margin-top: 10px;
+                padding: 10px;
+                margin-top: 20px;
+            }
+            input, select, button {
+                font-size: 16px;
             }
         }
     </style>
@@ -155,20 +158,20 @@
 <body>
 <div class="container" id="calculatorBox">
     <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 10px;">
-    <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;">
-        <h2 style="margin-bottom: 0;">SEO Revenue Calculator</h2>
+    <div style="margin-top: 10px; margin-bottom: 20px;">
+        <h2 style="margin-bottom: 0; display: inline-block;">SEO Revenue Calculator</h2>
         <label class="toggle-switch">
             <input type="checkbox" onclick="toggleDarkMode()">
             <span class="slider"></span>
         </label>
+        <p style="margin-top: 0px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
     </div>
-    <p style="margin-top: 4px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
 
     <label>Keyword:</label>
-    <input type="text" id="keyword" placeholder="🔍 Enter keyword">
+    <input type="text" id="keyword" placeholder="Enter keyword">
 
     <label>Monthly Search Volume:</label>
-    <input type="number" id="volume" placeholder="📈 Enter search volume">
+    <input type="number" id="volume" placeholder="Enter search volume">
 
     <label>Select Market:</label>
     <select id="market" onchange="setFlag()">
@@ -202,10 +205,32 @@
     </div>
 </div>
 <script>
-const flags = { FI: "https://flagcdn.com/fi.svg", SE: "https://flagcdn.com/se.svg", EE: "https://flagcdn.com/ee.svg", CA: "https://flagcdn.com/ca.svg", CL: "https://flagcdn.com/cl.svg", EC: "https://flagcdn.com/ec.svg", IS: "https://flagcdn.com/is.svg", MX: "https://flagcdn.com/mx.svg", NO: "https://flagcdn.com/no.svg", ONT: "https://flagcdn.com/ca.svg", PE: "https://flagcdn.com/pe.svg" };
+const flags = {
+    FI: "https://flagcdn.com/fi.svg",
+    SE: "https://flagcdn.com/se.svg",
+    EE: "https://flagcdn.com/ee.svg",
+    CA: "https://flagcdn.com/ca.svg",
+    CL: "https://flagcdn.com/cl.svg",
+    EC: "https://flagcdn.com/ec.svg",
+    IS: "https://flagcdn.com/is.svg",
+    MX: "https://flagcdn.com/mx.svg",
+    NO: "https://flagcdn.com/no.svg",
+    ONT: "https://flagcdn.com/ca.svg",
+    PE: "https://flagcdn.com/pe.svg"
+};
 
 const data = {
-    FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 }, SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 }, EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 }, CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 }, CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 }, EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 }, IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 }, MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 }, NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 }, ONT: { ngr: -80.48, turnover: 1865.69, cr: 0.04 }, PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 }
+    FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
+    SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 },
+    EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
+    CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
+    CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
+    EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
+    IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
+    MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
+    NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 },
+    ONT: { ngr: -80.48, turnover: 1865.69, cr: 0.04 },
+    PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 }
 };
 
 const visibility = [
