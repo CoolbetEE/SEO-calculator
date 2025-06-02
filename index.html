@@ -88,32 +88,31 @@
             animation: fadeIn 1s ease-in-out;
         }
 
+        .blue {
+            color: #1E90FF;
+        }
+
         @keyframes fadeIn {
             from {opacity: 0;}
             to {opacity: 1;}
-        }
-
-        .animated-number {
-            font-weight: bold;
-            display: inline-block;
         }
     </style>
 </head>
 <body>
 <div class="container" id="calculatorBox">
     <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 10px;">
-    <h2 style="margin-bottom: 0;" id="headline">SEO Revenue Calculator</h2>
+    <h2 style="margin-bottom: 0;">SEO Revenue Calculator</h2>
     <p style="margin-top: 0px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
 
     <button onclick="toggleDarkMode()">🌙 Toggle Theme</button>
 
-    <label id="labelKeyword">Keyword:</label>
+    <label>Keyword:</label>
     <input type="text" id="keyword" placeholder="Enter keyword">
 
-    <label id="labelVolume">Monthly Search Volume:</label>
+    <label>Monthly Search Volume:</label>
     <input type="number" id="volume" placeholder="Enter search volume">
 
-    <label id="labelMarket">Select Market:</label>
+    <label>Select Market:</label>
     <select id="market" onchange="setFlag();">
         <option value="FI">Finland</option>
         <option value="SE">Sweden</option>
@@ -129,10 +128,12 @@
     </select>
     <span id="flagDisplay"></span>
 
-    <label id="labelType">Use NGR or Turnover:</label>
+    <label>Use:</label>
     <select id="valueType">
         <option value="ngr">NGR</option>
         <option value="turnover">Turnover</option>
+        <option value="sportsbook">Sportsbook Only</option>
+        <option value="casino">Casino Only</option>
     </select>
 
     <button onclick="calculateRevenue()">Calculate</button>
@@ -156,17 +157,17 @@
     };
 
     const data = {
-        FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
-        SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 },
-        EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
-        CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
-        CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
-        EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
-        IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
-        MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
-        NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 },
-        ONT: { ngr: -80.48, turnover: 1865.69, cr: 0.04 },
-        PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 }
+        FI: { ngr: 62.75, turnover: 1616.56, sportsbook: 530.6, casino: 1084.55, cr: 0.05 },
+        SE: { ngr: 46.27, turnover: 1324.77, sportsbook: 557.57, casino: 765.66, cr: 0.05 },
+        EE: { ngr: 44.22, turnover: 1267.34, sportsbook: 225.71, casino: 1041.06, cr: 0.05 },
+        CA: { ngr: 35.26, turnover: 2578.08, sportsbook: 1401.85, casino: 1173.8, cr: 0.04 },
+        CL: { ngr: 27.54, turnover: 531.64, sportsbook: 144.53, casino: 386.44, cr: 0.03 },
+        EC: { ngr: 16.62, turnover: 484.91, sportsbook: 327.17, casino: 156.12, cr: 0.03 },
+        IS: { ngr: 78.94, turnover: 1869.87, sportsbook: 466.65, casino: 1402.43, cr: 0.05 },
+        MX: { ngr: 6.85, turnover: 497.3, sportsbook: 211.21, casino: 284.02, cr: 0.03 },
+        NO: { ngr: 117.41, turnover: 2757.3, sportsbook: 621.42, casino: 2133.82, cr: 0.05 },
+        ONT: { ngr: -80.48, turnover: 1865.69, sportsbook: 776.33, casino: 1089.36, cr: 0.04 },
+        PE: { ngr: 26.14, turnover: 443.48, sportsbook: 228.63, casino: 212.56, cr: 0.03 }
     };
 
     const visibility = [
@@ -188,20 +189,18 @@
         document.getElementById("calculatorBox").classList.toggle("dark-mode");
     }
 
-    function animateNumber(el, end) {
-        let start = 0;
-        const duration = 800;
-        const startTime = performance.now();
-
-        function update(currentTime) {
-            const progress = Math.min((currentTime - startTime) / duration, 1);
-            el.textContent = Math.round(progress * end);
-            if (progress < 1) {
-                requestAnimationFrame(update);
+    function animateNumber(target, value) {
+        let current = 0;
+        const step = Math.ceil(value / 20);
+        const interval = setInterval(() => {
+            current += step;
+            if (current >= value) {
+                target.textContent = value;
+                clearInterval(interval);
+            } else {
+                target.textContent = current;
             }
-        }
-
-        requestAnimationFrame(update);
+        }, 20);
     }
 
     function calculateRevenue() {
@@ -211,8 +210,10 @@
 
         if (isNaN(volume)) return;
 
-        const { cr, ngr, turnover } = data[market];
-        const aov = valueType === 'ngr' ? ngr : turnover;
+        const { cr, ngr, turnover, sportsbook, casino } = data[market];
+        const aov = valueType === 'ngr' ? ngr :
+                    valueType === 'turnover' ? turnover :
+                    valueType === 'sportsbook' ? sportsbook : casino;
 
         const output = document.getElementById("output");
         document.getElementById("spinner").style.display = "block";
@@ -224,17 +225,13 @@
                 const traffic = Math.round(volume * ctr);
                 const conv = Math.round(traffic * cr);
                 const rev = Math.round(conv * aov);
-
-                html += `<p class='fade-in'><b>${(ctr * 100).toFixed(1)}% visibility (${label})</b><br>
-                    Traffic: <span class='animated-number' data-value='${traffic}'>0</span><br>
-                    Conversions: <span class='animated-number' data-value='${conv}'>0</span><br>
-                    Estimated Revenue: €<span class='animated-number' data-value='${rev}'>0</span></p>`;
+                html += `<p class='fade-in'><b>${(ctr * 100).toFixed(1)}% visibility (${label})</b><br>` +
+                        `Traffic: <span class='blue'>${traffic}</span><br>` +
+                        `Conversions: <span class='blue'>${conv}</span><br>` +
+                        `Estimated Revenue: <span class='blue'>€${rev}</span></p>`;
             });
             document.getElementById("spinner").style.display = "none";
             output.innerHTML = html;
-            document.querySelectorAll('.animated-number').forEach(el => {
-                animateNumber(el, parseInt(el.dataset.value));
-            });
         }, 800);
     }
 </script>
