@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>SEO Revenue Calculator</title>
+    <script src="https://apis.google.com/js/api.js"></script>
     <style>
         html, body {
             height: 100%;
@@ -58,13 +59,13 @@
     <h2>SEO Revenue Calculator</h2>
     <p style="margin-top: -10px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
 
-    <label>Keyword:</label>
+    <label id="labelKeyword">Keyword:</label>
     <input type="text" id="keyword" placeholder="Enter keyword">
 
-    <label>Monthly Search Volume:</label>
+    <label id="labelVolume">Monthly Search Volume:</label>
     <input type="number" id="volume" placeholder="Enter search volume">
 
-    <label>Select Market:</label>
+    <label id="labelMarket">Select Market:</label>
     <select id="market">
         <option value="FI">Finland</option>
         <option value="SE">Sweden</option>
@@ -79,18 +80,31 @@
         <option value="PE">Peru</option>
     </select>
 
-    <label>Use NGR or Turnover:</label>
+    <label id="labelType">Use NGR or Turnover:</label>
     <select id="valueType">
         <option value="ngr">NGR</option>
         <option value="turnover">Turnover</option>
     </select>
 
     <button onclick="calculateRevenue()">Calculate</button>
-
     <div id="output" class="result"></div>
 </div>
 
 <script>
+    const translations = {
+        FI: { keyword: "Hakusana:", volume: "Hakumäärä kuukaudessa:", market: "Valitse maa:", type: "Käytä NGR tai Turnover" },
+        SE: { keyword: "Nyckelord:", volume: "Sökvolym per månad:", market: "Välj marknad:", type: "Använd NGR eller Turnover" },
+        EE: { keyword: "Märksõna:", volume: "Igakuine otsingumaht:", market: "Vali turg:", type: "Kasuta NGR või Käive" },
+        CA: { keyword: "Keyword:", volume: "Monthly Search Volume:", market: "Select Market:", type: "Use NGR or Turnover:" },
+        CL: { keyword: "Palabra clave:", volume: "Volumen de búsqueda mensual:", market: "Selecciona mercado:", type: "Usar NGR o Turnover:" },
+        EC: { keyword: "Palabra clave:", volume: "Volumen mensual:", market: "Selecciona país:", type: "Usar NGR o Turnover:" },
+        IS: { keyword: "Lykilorð:", volume: "Mánaðarleg leit:", market: "Veldu markað:", type: "Nota NGR eða Turnover:" },
+        MX: { keyword: "Palabra clave:", volume: "Volumen de búsqueda:", market: "Selecciona mercado:", type: "Usar NGR o Turnover:" },
+        NO: { keyword: "Søkeord:", volume: "Søkevolum per måned:", market: "Velg marked:", type: "Bruk NGR eller Turnover" },
+        ONT: { keyword: "Keyword:", volume: "Monthly Search Volume:", market: "Select Market:", type: "Use NGR or Turnover:" },
+        PE: { keyword: "Palabra clave:", volume: "Volumen mensual:", market: "Selecciona país:", type: "Usar NGR o Turnover:" }
+    };
+
     const data = {
         CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
         CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
@@ -113,6 +127,16 @@
         { ctr: 0.05, label: "Position 5", tip: "Fifth result gets ~5% of search traffic" },
         { ctr: 0.03, label: "Positions 6–10", tip: "Average CTR for results ranked 6th to 10th combined" }
     ];
+
+    document.getElementById('market').addEventListener('change', () => {
+        const lang = document.getElementById('market').value;
+        if (translations[lang]) {
+            document.getElementById('labelKeyword').innerText = translations[lang].keyword;
+            document.getElementById('labelVolume').innerText = translations[lang].volume;
+            document.getElementById('labelMarket').innerText = translations[lang].market;
+            document.getElementById('labelType').innerText = translations[lang].type;
+        }
+    });
 
     function calculateRevenue() {
         const volume = parseFloat(document.getElementById('volume').value);
