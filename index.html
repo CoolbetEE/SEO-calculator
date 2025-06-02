@@ -353,6 +353,8 @@ function calculateRevenue() {
       </p>`;
     });
     document.getElementById("spinner").style.display = "none";
+    document.getElementById("output").style.display = "block";
+    document.getElementById("revenueChart").style.display = "block";
     output.innerHTML = html;
     visibility.forEach(({ ctr }, index) => {
       const traffic = Math.round(volume * ctr);
