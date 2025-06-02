@@ -34,6 +34,16 @@
             margin-top: 20px;
             padding: 10px;
             border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        .result b {
+            font-weight: bold;
+        }
+
+        .tooltip {
+            cursor: help;
+            text-decoration: underline dotted;
         }
     </style>
 </head>
@@ -90,6 +100,15 @@
             SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 }
         };
 
+        const visibilityByPosition = [
+            { ctr: 0.30, label: "Position 1", tip: "Top ranking gets ~30% of search traffic" },
+            { ctr: 0.15, label: "Position 2", tip: "Second result gets ~15% of search traffic" },
+            { ctr: 0.10, label: "Position 3", tip: "Third result gets ~10% of search traffic" },
+            { ctr: 0.07, label: "Position 4", tip: "Fourth result gets ~7% of search traffic" },
+            { ctr: 0.05, label: "Position 5", tip: "Fifth result gets ~5% of search traffic" },
+            { ctr: 0.03, label: "Positions 6–10", tip: "Average CTR for results ranked 6th to 10th combined" }
+        ];
+
         function calculateRevenue() {
             const volume = parseFloat(document.getElementById('volume').value);
             const market = document.getElementById('market').value;
@@ -102,17 +121,22 @@
                 return;
             }
 
-            const percentages = [0.3, 0.15, 0.1, 0.07, 0.05];
             let html = `<h3>Results for ${market} (${valueType.toUpperCase()}):</h3>`;
 
-            percentages.forEach(p => {
-                const traffic = volume * p;
+            visibilityByPosition.forEach(pos => {
+                const traffic = volume * pos.ctr;
                 const conversions = traffic * cr;
                 const revenue = conversions * aov;
-                html += `<p><b>${(p * 100).toFixed(0)}% visibility:</b><br>
-                        Traffic: ${Math.round(traffic)}<br>
-                        Conversions: ${Math.round(conversions)}<br>
-                        Estimated Revenue: €${Math.round(revenue)}</p>`;
+
+                html += `
+                    <div style="margin-bottom: 20px;">
+                        <b class="tooltip" title="${pos.tip}">
+                            ${(pos.ctr * 100).toFixed(1)}% visibility (${pos.label})
+                        </b><br>
+                        <span style="margin-left: 10px;">Traffic: <b>${Math.round(traffic)}</b></span><br>
+                        <span style="margin-left: 10px;">Conversions: <b>${Math.round(conversions)}</b></span><br>
+                        <span style="margin-left: 10px;">Estimated Revenue: <b style="color:#007BFF;">€${Math.round(revenue)}</b></span>
+                    </div>`;
             });
 
             document.getElementById('output').innerHTML = html;
