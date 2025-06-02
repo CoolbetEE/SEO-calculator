@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,47 +32,71 @@
       text-align: center;
     }
 
-    .input-box, .output-box {
+    .input-section, .output-section {
       padding: 20px;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.06);
     }
 
-    .input-box {
-      background: #f9f9f9;
+    .input-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       flex: 1 1 280px;
+      color: white;
     }
 
-    .output-box {
-      background: #ffffff;
+    .output-section {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
       flex: 2 1 300px;
+      color: white;
     }
 
     input, select, button {
-      padding: 10px;
+      padding: 12px;
       margin: 10px 0;
       width: 100%;
-      border-radius: 6px;
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      background-color: white;
-      color: #000;
+      border-radius: 8px;
+      border: 2px solid transparent;
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #333;
       box-sizing: border-box;
-      transition: border 0.3s, box-shadow 0.3s;
+      transition: all 0.3s ease;
+      font-size: 14px;
     }
 
-    input:focus, select:focus, button:focus {
+    input:focus, select:focus {
       outline: none;
-      border-color: #007bff;
-      box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+      border-color: #00d4aa;
+      box-shadow: 0 0 15px rgba(0, 212, 170, 0.3);
+      background-color: white;
+      transform: translateY(-2px);
+    }
+
+    button {
+      background: linear-gradient(135deg, #00d4aa 0%, #007cf0 100%);
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+      border: none;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 124, 240, 0.3);
+    }
+
+    button:active {
+      transform: translateY(0);
     }
 
     .result {
       margin-top: 20px;
-      padding: 15px;
-      border-radius: 6px;
-      background: #f2f2f5;
-      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       text-align: left;
+      backdrop-filter: blur(10px);
     }
 
     .toggle-switch {
@@ -136,8 +162,9 @@
     }
 
     .blue-text {
-      color: #007bff;
+      color: #00d4aa;
       font-weight: bold;
+      text-shadow: 0 0 10px rgba(0, 212, 170, 0.3);
     }
 
     #spinner {
@@ -151,12 +178,13 @@
 
     #revenueChart {
       margin-top: 30px;
-      background: #fdfdfd;
-      border-radius: 10px;
-      padding: 10px;
-      border: 1px solid #e0e0e0;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
       animation: fadeIn 0.6s ease-in-out;
+      backdrop-filter: blur(10px);
     }
 
     #output, #revenueChart {
@@ -170,52 +198,95 @@
       margin-left: 5px;
     }
 
+    .error-message {
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.1);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      padding: 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      backdrop-filter: blur(5px);
+    }
+
     @media (max-width: 600px) {
       .container {
         padding: 12px;
         margin-top: 10px;
       }
+      
+      .main-content {
+        flex-direction: column;
+      }
+    }
+
+    .main-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
     /* DARK MODE */
     body.dark-mode {
-      background-color: #1C1C1E;
+      background-color: #0f0f23;
     }
 
     body.dark-mode .container {
-      background-color: rgba(28, 28, 30, 0.85);
+      background-color: rgba(15, 15, 35, 0.9);
       color: #f1f1f1;
     }
 
-    body.dark-mode .input-box {
-      background-color: rgba(34, 34, 38, 0.9);
+    body.dark-mode .input-section {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      color: #e0e0e0;
     }
 
-    body.dark-mode .output-box {
-      background-color: rgba(40, 40, 44, 0.92);
+    body.dark-mode .output-section {
+      background: linear-gradient(135deg, #0f3460 0%, #16537e 100%);
+      color: #e0e0e0;
     }
 
     body.dark-mode input,
-    body.dark-mode select,
+    body.dark-mode select {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      color: #e0e0e0 !important;
+      border: 2px solid rgba(255, 255, 255, 0.2) !important;
+    }
+
+    body.dark-mode input:focus,
+    body.dark-mode select:focus {
+      border-color: #00d4aa !important;
+      background-color: rgba(255, 255, 255, 0.15) !important;
+    }
+
     body.dark-mode button {
-      background-color: #1C1C1E !important;
-      color: #f5f5f5 !important;
-      border: 1px solid #2a2d45 !important;
+      background: linear-gradient(135deg, #00d4aa 0%, #007cf0 100%) !important;
+      color: white !important;
     }
 
     body.dark-mode label {
-      color: #f5f5f5 !important;
+      color: #e0e0e0 !important;
+      font-weight: 500;
     }
 
     body.dark-mode .result {
-      background-color: rgba(35, 35, 40, 0.9);
-      border-color: #3a3a3a;
-      color: #f0f0f0;
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+      color: #e0e0e0;
     }
 
     body.dark-mode #revenueChart {
-      background-color: #1e1e1e;
-      border-color: #444;
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    body.dark-mode .blue-text {
+      color: #00d4aa !important;
+    }
+
+    body.dark-mode .error-message {
+      background: rgba(255, 107, 107, 0.15);
+      border-color: rgba(255, 107, 107, 0.3);
+      color: #ff8a8a;
     }
 
     body.dark-mode h2.plain-title {
@@ -235,7 +306,7 @@
 </head>
 <body>
 <div class="container" id="calculatorBox">
-  <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 20px;">
+  <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 20px;" onerror="this.style.display='none'">
   <div style="margin-bottom: 4px; display: flex; justify-content: center; align-items: center; gap: 10px;">
     <h2 class="plain-title" style="margin-bottom: 0;">SEO Revenue Calculator</h2>
     <label class="toggle-switch">
@@ -245,15 +316,15 @@
   </div>
   <p style="margin-top: 4px; margin-bottom: 40px; font-size: 14px; font-weight: 600; color: #555;">by <span style="color: #007bff;">Edvard Kingissepp</span></p>
 
-  <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-<div style="flex: 1 1 280px; background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.06);">
-      <label>Keyword:</label>
+  <div class="main-content">
+    <div class="input-section">
+      <label for="keyword">Keyword:</label>
       <input type="text" id="keyword" placeholder="🔍 Enter keyword">
 
-      <label>Monthly Search Volume:</label>
-      <input type="number" id="volume" placeholder="📈 Enter search volume">
+      <label for="volume">Monthly Search Volume:</label>
+      <input type="number" id="volume" placeholder="📈 Enter search volume" min="0">
 
-      <label>Select Market:</label>
+      <label for="market">Select Market:</label>
       <select id="market" onchange="setFlag()">
         <option value="FI">Finland</option>
         <option value="SE">Sweden</option>
@@ -269,7 +340,7 @@
       </select>
       <span id="flagDisplay"></span>
 
-      <label>Use NGR or Turnover:</label>
+      <label for="valueType">Use NGR or Turnover:</label>
       <select id="valueType">
         <option value="ngr">NGR</option>
         <option value="turnover">Turnover</option>
@@ -277,25 +348,33 @@
 
       <button onclick="calculateRevenue()">Calculate</button>
       <div id="spinner">⏳ Calculating...</div>
-      <div id="export-buttons">
+      
+      <div id="export-buttons" style="display: none;">
         <button onclick="exportToCSV()">Export CSV</button>
         <button onclick="window.print()">Export PDF</button>
       </div>
     </div>
 
-<div style="flex: 2 1 300px; background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+    <div class="output-section">
       <div id="output" class="result"></div>
       <canvas id="revenueChart" style="margin-top: 20px; max-width: 100%;"></canvas>
     </div>
   </div>
 </div>
-</body>
+
 <script>
 const flags = {
-  FI: "https://flagcdn.com/fi.svg", SE: "https://flagcdn.com/se.svg", EE: "https://flagcdn.com/ee.svg",
-  CA: "https://flagcdn.com/ca.svg", CL: "https://flagcdn.com/cl.svg", EC: "https://flagcdn.com/ec.svg",
-  IS: "https://flagcdn.com/is.svg", MX: "https://flagcdn.com/mx.svg", NO: "https://flagcdn.com/no.svg",
-  ONT: "https://flagcdn.com/ca.svg", PE: "https://flagcdn.com/pe.svg"
+  FI: "https://flagcdn.com/fi.svg", 
+  SE: "https://flagcdn.com/se.svg", 
+  EE: "https://flagcdn.com/ee.svg",
+  CA: "https://flagcdn.com/ca.svg", 
+  CL: "https://flagcdn.com/cl.svg", 
+  EC: "https://flagcdn.com/ec.svg",
+  IS: "https://flagcdn.com/is.svg", 
+  MX: "https://flagcdn.com/mx.svg", 
+  NO: "https://flagcdn.com/no.svg",
+  ONT: "https://flagcdn.com/ca.svg", 
+  PE: "https://flagcdn.com/pe.svg"
 };
 
 const data = {
@@ -321,117 +400,216 @@ const visibility = [
   { ctr: 0.03, label: "Positions 6–10" }
 ];
 
+// Инициализация флага при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+  setFlag();
+});
+
 function setFlag() {
   const market = document.getElementById('market').value;
-  document.getElementById('flagDisplay').innerHTML = `<img class="flag" src="${flags[market]}" alt="flag">`;
+  const flagImg = `<img class="flag" src="${flags[market]}" alt="flag" onerror="this.style.display='none'">`;
+  document.getElementById('flagDisplay').innerHTML = flagImg;
 }
 
 function toggleDarkMode() {
   document.body.classList.toggle("dark-mode");
-  document.getElementById("calculatorBox").classList.toggle("dark-mode");
 }
 
-function animateCounter(id, end) {
-  let el = document.getElementById(id);
-  let start = 0;
-  const step = Math.ceil(end / 40);
+function showError(message) {
+  const output = document.getElementById("output");
+  output.innerHTML = `<div class="error-message">${message}</div>`;
+  output.style.display = "block";
+}
+
+function animateCounter(elementId, targetValue) {
+  const element = document.getElementById(elementId);
+  if (!element) return;
+  
+  let currentValue = 0;
+  const increment = Math.ceil(targetValue / 50);
   const interval = setInterval(() => {
-    start += step;
-    if (start >= end) {
-      el.textContent = end + "€";
+    currentValue += increment;
+    if (currentValue >= targetValue) {
+      element.textContent = Math.round(targetValue) + "€";
       clearInterval(interval);
     } else {
-      el.textContent = start + "€";
+      element.textContent = Math.round(currentValue) + "€";
     }
-  }, 15);
+  }, 20);
 }
 
 function calculateRevenue() {
+  const keyword = document.getElementById('keyword').value.trim();
   const volume = parseFloat(document.getElementById('volume').value);
   const market = document.getElementById('market').value;
   const valueType = document.getElementById('valueType').value;
 
-  if (isNaN(volume)) return;
+  // Validation
+  if (!keyword) {
+    showError('Please enter a keyword');
+    return;
+  }
+
+  if (isNaN(volume) || volume <= 0) {
+    showError('Please enter a valid search volume (greater than 0)');
+    return;
+  }
+
+  if (!data[market]) {
+    showError('Selected market not found in database');
+    return;
+  }
 
   const { cr, ngr, turnover } = data[market];
   const aov = valueType === 'ngr' ? ngr : turnover;
 
+  // Check for negative NGR values
+  if (valueType === 'ngr' && aov < 0) {
+    showError(`Warning: NGR for ${market} is negative (${aov}€). We recommend using Turnover instead.`);
+    return;
+  }
+
   const output = document.getElementById("output");
-  document.getElementById("spinner").style.display = "block";
+  const spinner = document.getElementById("spinner");
+  const exportButtons = document.getElementById("export-buttons");
+  
+  // Show spinner
+  spinner.style.display = "block";
   output.innerHTML = "";
+  output.style.display = "none";
 
   const labels = [];
   const revenues = [];
 
   setTimeout(() => {
-  let html = "";
-  visibility.forEach(({ ctr, label }, index) => {
-    const traffic = Math.round(volume * ctr);
-    const conv = Math.round(traffic * cr);
-    const rev = Math.round(conv * aov);
-    labels.push(label);
-    revenues.push(rev);
-    html += `<p class='fade-in'>
-      <b>${(ctr * 100).toFixed(1)}% visibility (${label})</b><br>
-      Traffic: <span class='blue-text'>${traffic}</span><br>
-      Conversions: <span class='blue-text'>${conv}</span><br>
-      Estimated Revenue: <span id='rev-${index}' class='blue-text'>0€</span>
-    </p>`;
-  });
-    document.getElementById("spinner").style.display = "none";
-    document.getElementById("output").style.display = "block";
-    document.getElementById("revenueChart").style.display = "block";
-    output.innerHTML = html;
-    visibility.forEach(({ ctr }, index) => {
+    let html = `<h3>Results for "${keyword}" (${volume.toLocaleString()} searches/month)</h3>`;
+    
+    visibility.forEach(({ ctr, label }, index) => {
       const traffic = Math.round(volume * ctr);
-      const conv = Math.round(traffic * cr);
-      const rev = Math.round(conv * aov);
-      animateCounter(`rev-${index}`, rev);
+      const conversions = Math.round(traffic * cr);
+      const revenue = Math.round(conversions * Math.abs(aov)); // Use absolute value for calculation
+      
+      labels.push(label);
+      revenues.push(revenue);
+      
+      html += `<div class='fade-in' style='margin-bottom: 15px; padding: 10px; border-left: 3px solid #007bff;'>
+        <strong>${(ctr * 100).toFixed(1)}% visibility (${label})</strong><br>
+        Traffic: <span class='blue-text'>${traffic.toLocaleString()}</span><br>
+        Conversions: <span class='blue-text'>${conversions.toLocaleString()}</span><br>
+        Expected Revenue: <span id='rev-${index}' class='blue-text'>0€</span>
+      </div>`;
     });
 
-    // Chart rendering
-    const ctx = document.getElementById('revenueChart').getContext('2d');
-    if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
-  window.revenueChart.destroy();
+    // Hide spinner and show results
+    spinner.style.display = "none";
+    output.innerHTML = html;
+    output.style.display = "block";
+    document.getElementById("revenueChart").style.display = "block";
+    exportButtons.style.display = "block";
+
+    // Animate numbers
+    visibility.forEach(({ ctr }, index) => {
+      const traffic = Math.round(volume * ctr);
+      const conversions = Math.round(traffic * cr);
+      const revenue = Math.round(conversions * Math.abs(aov));
+      setTimeout(() => animateCounter(`rev-${index}`, revenue), index * 100);
+    });
+
+    // Create chart
+    createChart(labels, revenues);
+  }, 800);
 }
-    window.revenueChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Estimated Revenue (€)',
-          data: revenues,
-          backgroundColor: 'rgba(0, 123, 255, 0.6)',
-          borderRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false }
+
+function createChart(labels, revenues) {
+  const ctx = document.getElementById('revenueChart').getContext('2d');
+  
+  // Destroy previous chart if it exists
+  if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
+    window.revenueChart.destroy();
+  }
+
+  window.revenueChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Expected Revenue (€)',
+        data: revenues,
+        backgroundColor: 'rgba(0, 123, 255, 0.6)',
+        borderColor: 'rgba(0, 123, 255, 1)',
+        borderWidth: 1,
+        borderRadius: 6,
+        borderSkipped: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: { 
+          display: true,
+          position: 'top'
         },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: {
-              callback: value => value + "€"
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return `Revenue: ${context.parsed.y.toLocaleString()}€`;
             }
           }
         }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            callback: function(value) {
+              return value.toLocaleString() + "€";
+            }
+          }
+        },
+        x: {
+          ticks: {
+            maxRotation: 45
+          }
+        }
       }
-    });
-  }, 800);
+    }
+  });
 }
+
 function exportToCSV() {
-  const output = document.getElementById("output").innerText;
-  const blob = new Blob([output], { type: 'text/csv;charset=utf-8;' });
+  const keyword = document.getElementById('keyword').value.trim();
+  const volume = document.getElementById('volume').value;
+  const market = document.getElementById('market').value;
+  const valueType = document.getElementById('valueType').value;
+  
+  if (!keyword || !volume) {
+    alert('Please perform calculation first');
+    return;
+  }
+
+  const { cr, ngr, turnover } = data[market];
+  const aov = valueType === 'ngr' ? ngr : turnover;
+  
+  let csvContent = "Позиция,CTR (%),Трафик,Конверсии,Доход (€)\n";
+  
+  visibility.forEach(({ ctr, label }) => {
+    const traffic = Math.round(volume * ctr);
+    const conversions = Math.round(traffic * cr);
+    const revenue = Math.round(conversions * Math.abs(aov));
+    csvContent += `"${label}",${(ctr * 100).toFixed(1)},${traffic},${conversions},${revenue}\n`;
+  });
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement("a");
-  link.setAttribute("href", URL.createObjectURL(blob));
-  link.setAttribute("download", "seo_revenue.csv");
-  link.style.display = "none";
+  const url = URL.createObjectURL(blob);
+  link.setAttribute("href", url);
+  link.setAttribute("download", `seo_revenue_${keyword.replace(/\s+/g, '_')}.csv`);
+  link.style.visibility = 'hidden';
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 }
 </script>
 </body>
