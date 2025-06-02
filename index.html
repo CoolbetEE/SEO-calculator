@@ -194,6 +194,7 @@
             animation: none !important;
         }
     </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container" id="calculatorBox">
@@ -238,6 +239,7 @@
     <button onclick="calculateRevenue()">Calculate</button>
     <div id="spinner">⏳ Calculating...</div>
     <div id="output" class="result"></div>
+    <canvas id="revenueChart" style="margin-top: 20px;"></canvas>
 
     <div id="export-buttons">
       <button onclick="exportToCSV()">Export CSV</button>
@@ -315,12 +317,17 @@ function calculateRevenue() {
   document.getElementById("spinner").style.display = "block";
   output.innerHTML = "";
 
+  const labels = [];
+  const revenues = [];
+
   setTimeout(() => {
     let html = "";
     visibility.forEach(({ ctr, label }, index) => {
       const traffic = Math.round(volume * ctr);
       const conv = Math.round(traffic * cr);
       const rev = Math.round(conv * aov);
+      labels.push(label);
+      revenues.push(rev);
       html += `<p class='fade-in'>
         <b>${(ctr * 100).toFixed(1)}% visibility (${label})</b><br>
         Traffic: <span class='blue-text'>${traffic}</span><br>
@@ -336,9 +343,38 @@ function calculateRevenue() {
       const rev = Math.round(conv * aov);
       animateCounter(`rev-${index}`, rev);
     });
+
+    // Chart rendering
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    if (window.revenueChart) window.revenueChart.destroy(); // prevent duplicates
+    window.revenueChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Estimated Revenue (€)',
+          data: revenues,
+          backgroundColor: 'rgba(0, 123, 255, 0.6)',
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: value => value + "€"
+            }
+          }
+        }
+      }
+    });
   }, 800);
 }
-
 function exportToCSV() {
   const output = document.getElementById("output").innerText;
   const blob = new Blob([output], { type: 'text/csv;charset=utf-8;' });
