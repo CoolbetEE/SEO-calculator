@@ -5,238 +5,265 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SEO Revenue Calculator</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    html, body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Helvetica Neue', Arial, sans-serif;
+      background: url('https://i.imgur.com/4e8YmHp.png') repeat;
+      color: #ffffff;
+      line-height: 1.5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       min-height: 100vh;
-      color: #1d1d1f;
-      font-size: 16px;
-      line-height: 1.6;
-      transition: all 0.3s ease;
+      padding: 10px;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: inherit;
+      filter: blur(2px);
+      z-index: -1;
     }
 
     .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px 16px;
+      max-width: 1000px;
+      width: 100%;
+      background: rgba(20, 20, 25, 0.9);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      margin: 10px auto;
+      overflow: hidden;
     }
 
     .header {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 20px;
     }
 
-    .logo {
-      max-width: 140px;
-      margin-bottom: 16px;
-      opacity: 0.9;
-    }
-
-    .title-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-      margin-bottom: 8px;
-      flex-wrap: wrap;
+    .header img {
+      max-width: 120px;
+      margin-bottom: 12px;
     }
 
     h1 {
-      font-size: clamp(1.8rem, 5vw, 2.5rem);
-      font-weight: 700;
-      background: linear-gradient(135deg, #007aff, #5856d6);
+      font-size: 26px;
+      font-weight: 600;
+      background: linear-gradient(90deg, #5b86e5, #36d1dc);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: -0.02em;
-      text-align: center;
+      margin-bottom: 4px;
     }
 
     .subtitle {
-      font-size: 0.9rem;
-      color: #86868b;
+      font-size: 14px;
+      color: #b0b0b5;
       font-weight: 400;
-      margin-top: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
     }
 
-    .subtitle span {
-      color: #007aff;
-      font-weight: 500;
+    .highlight-name {
+      background: linear-gradient(90deg, #5b86e5, #36d1dc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 600;
     }
 
-    .description {
-      font-size: 0.95rem;
-      color: #666;
-      max-width: 600px;
-      margin: 16px auto 0;
-      line-height: 1.5;
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
 
-    .main-content {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
-      align-items: start;
+    .input-box {
+      background: rgba(30, 30, 35, 0.9);
+      padding: 16px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
     }
 
-    .input-section, .output-section {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 16px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.08),
-        0 1px 0px rgba(255, 255, 255, 0.6) inset;
-      padding: 24px;
-      transition: all 0.3s ease;
+    .output-box {
+      background: rgba(25, 25, 30, 0.95);
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     }
 
-    .input-section:hover, .output-section:hover {
-      box-shadow: 
-        0 12px 40px rgba(0, 0, 0, 0.12),
-        0 1px 0px rgba(255, 255, 255, 0.6) inset;
-      transform: translateY(-2px);
+    .summary-box {
+      background: rgba(40, 40, 45, 0.9);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      text-align: center;
+      font-size: 14px;
+      color: #b0b0b5;
     }
 
-    .form-group {
-      margin-bottom: 20px;
+    .summary-box h3 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #5b86e5, #36d1dc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid #404045;
+    }
+
+    .tab {
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #b0b0b5;
+      transition: color 0.3s;
+    }
+
+    .tab.active {
+      color: #ffffff;
+      border-bottom: 2px solid #5b86e5;
+    }
+
+    .tab:hover {
+      color: #ffffff;
     }
 
     label {
-      display: block;
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: #1d1d1f;
-      margin-bottom: 8px;
-      letter-spacing: -0.01em;
-    }
-
-    .input-help {
-      font-size: 0.8rem;
-      color: #86868b;
-      margin-top: 4px;
-      line-height: 1.4;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 16px 18px;
-      border: 2px solid rgba(0, 0, 0, 0.08);
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.9);
-      font-size: 1rem;
-      font-weight: 400;
-      color: #1d1d1f;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(10px);
-      -webkit-appearance: none;
-      appearance: none;
-    }
-
-    select {
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-      background-position: right 12px center;
-      background-repeat: no-repeat;
-      background-size: 16px;
-      padding-right: 40px;
-    }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: #007aff;
-      background: rgba(255, 255, 255, 1);
-      box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.1);
-      transform: scale(1.01);
-    }
-
-    input::placeholder {
-      color: #86868b;
-      font-weight: 400;
-    }
-
-    .calculate-btn {
-      width: 100%;
-      padding: 18px;
-      background: linear-gradient(135deg, #007aff, #5856d6);
-      color: white;
-      border: none;
-      border-radius: 14px;
-      font-size: 1.1rem;
+      font-size: 14px;
       font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #404045;
+      border-radius: 8px;
+      font-size: 16px;
+      background: #25252a;
+      color: #ffffff;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input::placeholder, select::placeholder {
+      color: #8e8e93;
+      opacity: 1;
+    }
+
+    input:focus, select:focus, button:focus {
+      outline: none;
+      border-color: #5b86e5;
+      box-shadow: 0 0 0 3px rgba(91, 134, 229, 0.2);
+    }
+
+    button {
+      background: linear-gradient(90deg, #5b86e5, #36d1dc);
+      color: #ffffff;
+      font-weight: 500;
+      border: none;
       cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 20px rgba(0, 122, 255, 0.3);
-      letter-spacing: -0.01em;
-      margin-bottom: 20px;
-      touch-action: manipulation;
+      transition: opacity 0.3s;
+      padding: 14px;
+      margin-top: 8px;
     }
 
-    .calculate-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(0, 122, 255, 0.4);
-    }
-
-    .calculate-btn:active {
-      transform: translateY(0px);
-    }
-
-    .calculate-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
+    button:hover {
+      opacity: 0.9;
     }
 
     .export-buttons {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .export-btn {
-      padding: 14px 12px;
-      background: rgba(0, 0, 0, 0.04);
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-      font-size: 0.9rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      color: #1d1d1f;
-      touch-action: manipulation;
-    }
-
-    .export-btn:hover {
-      background: rgba(0, 0, 0, 0.08);
-      transform: translateY(-1px);
-    }
-
-    .toggle-container {
       display: flex;
-      align-items: center;
       gap: 12px;
-      margin-top: 8px;
+      margin-top: 12px;
+    }
+
+    .export-buttons button {
+      background: #404045;
+      color: #ffffff;
+      flex: 1;
+      padding: 12px;
+    }
+
+    .export-buttons button:hover {
+      background: #505055;
+    }
+
+    .result {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      background: rgba(30, 30, 35, 0.9);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .result p {
+      margin-bottom: 12px;
+    }
+
+    .blue-text {
+      color: #5b86e5;
+      font-weight: 600;
+    }
+
+    #spinner {
+      display: none;
+      text-align: center;
+      font-size: 16px;
+      color: #b0b0b5;
+      margin: 12px 0;
+    }
+
+    #revenueChart {
+      margin-top: 16px;
+      background: rgba(25, 25, 30, 0.95);
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    #monthlyOutput, #quarterlyOutput, #revenueChart {
+      display: none;
+    }
+
+    .flag {
+      width: 20px;
+      height: 14px;
+      vertical-align: middle;
+      margin-left: 8px;
     }
 
     .toggle-switch {
       position: relative;
-      width: 52px;
-      height: 32px;
-      flex-shrink: 0;
+      display: inline-block;
+      width: 48px;
+      height: 28px;
+      margin-left: 12px;
+      vertical-align: middle;
     }
 
     .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
+      display: none;
     }
 
     .slider {
@@ -246,836 +273,476 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: #e5e5ea;
-      transition: 0.3s ease;
-      border-radius: 16px;
+      background-color: #404045;
+      transition: 0.3s;
+      border-radius: 28px;
     }
 
     .slider:before {
       position: absolute;
       content: "";
-      height: 28px;
-      width: 28px;
+      height: 24px;
+      width: 24px;
       left: 2px;
       bottom: 2px;
-      background-color: white;
-      transition: 0.3s ease;
+      background-color: #ffffff;
+      transition: 0.3s;
       border-radius: 50%;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
     input:checked + .slider {
-      background-color: #34c759;
+      background-color: #5b86e5;
     }
 
     input:checked + .slider:before {
       transform: translateX(20px);
     }
 
-    .flag-container {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 8px;
-    }
-
-    .flag {
-      width: 24px;
-      height: 16px;
-      border-radius: 2px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    }
-
-    .market-info {
-      font-size: 0.8rem;
-      color: #86868b;
-      margin-left: 32px;
-    }
-
-    .output-section {
-      min-height: 200px;
-    }
-
-    #output {
-      display: none;
-    }
-
-    .result-item {
-      background: rgba(0, 0, 0, 0.02);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 16px;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      transition: all 0.3s ease;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: slideUp 0.6s ease forwards;
-    }
-
-    .result-item:hover {
-      background: rgba(0, 0, 0, 0.04);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    }
-
-    @keyframes slideUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .result-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1d1d1f;
-      margin-bottom: 16px;
-      letter-spacing: -0.01em;
-    }
-
-    .result-subtitle {
-      font-size: 0.85rem;
-      color: #666;
-      margin-bottom: 12px;
-      line-height: 1.4;
-    }
-
-    .result-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-    }
-
-    .stat {
-      text-align: center;
-      padding: 12px 8px;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 8px;
-      border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-
-    .stat-label {
-      font-size: 0.75rem;
-      color: #86868b;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 4px;
-    }
-
-    .stat-value {
-      font-size: clamp(1rem, 3vw, 1.2rem);
-      font-weight: 700;
-      color: #007aff;
-    }
-
-    .chart-container {
-      margin-top: 32px;
-      background: rgba(255, 255, 255, 0.6);
-      border-radius: 16px;
-      padding: 20px;
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      display: none;
-    }
-
-    .chart-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #1d1d1f;
-      margin-bottom: 16px;
-      text-align: center;
-    }
-
-    .spinner {
-      text-align: center;
-      padding: 40px;
-      display: none;
-    }
-
-    .spinner-icon {
-      font-size: 2rem;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .spinner-text {
-      margin-top: 16px;
-      color: #86868b;
-      font-weight: 500;
-    }
-
-    .info-box {
-      background: rgba(0, 122, 255, 0.08);
-      border: 1px solid rgba(0, 122, 255, 0.2);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 24px;
-    }
-
-    .info-box h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #007aff;
-      margin-bottom: 8px;
-    }
-
-    .info-box p {
-      font-size: 0.9rem;
-      color: #333;
-      line-height: 1.5;
-    }
-
-    /* Dark Mode */
-    body.dark-mode {
-      background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%);
-      color: #f2f2f7;
-    }
-
-    body.dark-mode .input-section,
-    body.dark-mode .output-section {
-      background: rgba(28, 28, 30, 0.85);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    body.dark-mode input,
-    body.dark-mode select {
-      background: rgba(44, 44, 46, 0.8);
-      border-color: rgba(255, 255, 255, 0.15);
-      color: #f2f2f7;
-    }
-
-    body.dark-mode select {
-      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23f2f2f7' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-    }
-
-    body.dark-mode input:focus,
-    body.dark-mode select:focus {
-      background: rgba(44, 44, 46, 1);
-      border-color: #007aff;
-    }
-
-    body.dark-mode .result-item {
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    body.dark-mode .stat {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.1);
-    }
-
-    body.dark-mode .chart-container {
-      background: rgba(44, 44, 46, 0.6);
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-
-    body.dark-mode .export-btn {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.2);
-      color: #f2f2f7;
-    }
-
-    body.dark-mode label,
-    body.dark-mode .result-title,
-    body.dark-mode .chart-title {
-      color: #f2f2f7;
-    }
-
-    body.dark-mode .input-help,
-    body.dark-mode .result-subtitle,
-    body.dark-mode .market-info {
-      color: #86868b;
-    }
-
-    body.dark-mode h1 {
-      -webkit-text-fill-color: transparent;
-    }
-
-    body.dark-mode .info-box {
-      background: rgba(0, 122, 255, 0.15);
-      border-color: rgba(0, 122, 255, 0.3);
-    }
-
-    body.dark-mode .info-box p {
-      color: #d1d1d6;
-    }
-
-    /* Desktop styles */
-    @media (min-width: 900px) {
+    @media (max-width: 768px) {
       .container {
-        padding: 40px 20px;
+        padding: 16px;
       }
 
-      .header {
-        margin-bottom: 60px;
+      h1 {
+        font-size: 22px;
       }
 
-      .logo {
-        max-width: 180px;
-        margin-bottom: 24px;
+      .subtitle {
+        font-size: 12px;
       }
 
-      .title-container {
-        gap: 20px;
+      input, select, button {
+        font-size: 14px;
+        padding: 10px;
       }
 
-      .main-content {
-        grid-template-columns: 400px 1fr;
-        gap: 40px;
-      }
-
-      .input-section, .output-section {
-        padding: 32px;
-      }
-
-      .export-buttons {
-        display: flex;
-      }
-
-      .result-stats {
-        gap: 16px;
-      }
-
-      .stat {
-        padding: 16px 12px;
-      }
-
-      .chart-container {
-        padding: 24px;
+      label {
+        font-size: 12px;
       }
     }
 
-    /* Small mobile adjustments */
-    @media (max-width: 480px) {
+    @media (max-width: 400px) {
       .container {
-        padding: 16px 12px;
-      }
-
-      .input-section, .output-section {
-        padding: 20px;
-      }
-
-      .title-container {
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .result-stats {
-        grid-template-columns: 1fr;
-        gap: 8px;
-      }
-
-      .stat {
         padding: 12px;
+        margin: 5px;
+      }
+
+      .header img {
+        max-width: 100px;
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      input, select, button {
+        font-size: 12px;
+        padding: 8px;
+      }
+
+      label {
+        font-size: 10px;
       }
 
       .export-buttons {
-        grid-template-columns: 1fr;
-        gap: 8px;
+        flex-direction: column;
       }
 
-      input, select {
-        padding: 14px 16px;
-      }
-
-      .calculate-btn {
-        padding: 16px;
-        font-size: 1rem;
+      .export-buttons button {
+        padding: 10px;
       }
     }
 
-    /* Very small screens */
-    @media (max-width: 360px) {
-      .container {
-        padding: 12px 8px;
-      }
+    /* Light Mode */
+    body.light-mode {
+      color: #1d1d1f;
+    }
 
-      .input-section, .output-section {
-        padding: 16px;
-      }
+    body.light-mode::before {
+      filter: blur(2px);
+    }
 
-      .form-group {
-        margin-bottom: 16px;
-      }
+    body.light-mode .container {
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    body.light-mode .input-box {
+      background: rgba(245, 245, 247, 0.9);
+    }
+
+    body.light-mode .output-box {
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    body.light-mode .summary-box {
+      background: rgba(245, 245, 247, 0.9);
+      color: #1d1d1f;
+    }
+
+    body.light-mode input,
+    body.light-mode select,
+    body.light-mode button {
+      background: #ffffff;
+      color: #1d1d1f;
+      border-color: #d2d2d7;
+    }
+
+    body.light-mode input::placeholder,
+    body.light-mode select::placeholder {
+      color: #8e8e93;
+    }
+
+    body.light-mode label {
+      color: #1d1d1f;
+    }
+
+    body.light-mode .result {
+      background: rgba(245, 245, 247, 0.9);
+      color: #1d1d1f;
+    }
+
+    body.light-mode #revenueChart {
+      background: rgba(255, 255, 255, 0.95);
+    }
+
+    body.light-mode .subtitle {
+      color: #6e6e73;
+    }
+
+    body.light-mode button {
+      background: linear-gradient(90deg, #5b86e5, #36d1dc);
+    }
+
+    body.light-mode .export-buttons button {
+      background: #e8e8ed;
+      color: #1d1d1f;
+    }
+
+    body.light-mode .export-buttons button:hover {
+      background: #d2d2d7;
+    }
+
+    body.light-mode .slider {
+      background-color: #d2d2d7;
+    }
+
+    body.light-mode input:checked + .slider {
+      background-color: #5b86e5;
+    }
+
+    body.light-mode .tab {
+      color: #6e6e73;
+    }
+
+    body.light-mode .tab.active {
+      color: #1d1d1f;
+      border-bottom: 2px solid #5b86e5;
+    }
+
+    body.light-mode .tab:hover {
+      color: #1d1d1f;
     }
   </style>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 </head>
-<body>
+<body class="dark-mode">
   <div class="container">
     <div class="header">
-      <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" class="logo">
-      <div class="title-container">
-        <h1>SEO Revenue Calculator</h1>
-        <div class="toggle-container">
-          <span style="font-size: 0.9rem; color: #86868b;">Dark mode</span>
-          <label class="toggle-switch">
-            <input type="checkbox" onclick="toggleDarkMode()">
-            <span class="slider"></span>
-          </label>
-        </div>
+      <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" onerror="this.src='https://via.placeholder.com/120x60.png?text=No+Logo';">
+      <h1>SEO Revenue Calculator</h1>
+      <div class="subtitle">
+        by <span class="highlight-name">Edvard Kingissepp</span> 
+        <label class="toggle-switch">
+          <input type="checkbox" onclick="toggleMode()">
+          <span class="slider"></span>
+        </label>
       </div>
-      <p class="subtitle">by <span>Edvard Kingissepp</span></p>
-      <p class="description">
-        Calculate potential revenue from ranking for specific keywords across different markets. 
-        Get insights into traffic, conversions, and revenue projections based on search position.
-      </p>
     </div>
+    <div class="content">
+      <div class="input-box">
+        <label for="keyword">Keyword</label>
+        <input type="text" id="keyword" placeholder="Enter keyword">
 
-    <div class="main-content">
-      <div class="input-section">
-        <div class="info-box">
-          <h3>💡 How it works</h3>
-          <p>Enter your target keyword and search volume to see revenue projections for different Google ranking positions. Data is based on real market conversion rates and AOV.</p>
-        </div>
+        <label for="volume">Monthly Search Volume</label>
+        <input type="number" id="volume" placeholder="Enter search volume">
 
-        <div class="form-group">
-          <label>🎯 Target Keyword</label>
-          <input type="text" id="keyword" placeholder="e.g., buy running shoes online">
-          <div class="input-help">Enter the keyword you want to rank for</div>
-        </div>
+        <label for="market">Select Market</label>
+        <select id="market" onchange="setFlag()">
+          <option value="FI">Finland</option>
+          <option value="SE">Sweden</option>
+          <option value="EE">Estonia</option>
+          <option value="CA">Canada</option>
+          <option value="CL">Chile</option>
+          <option value="EC">Ecuador</option>
+          <option value="IS">Iceland</option>
+          <option value="MX">Mexico</option>
+          <option value="NO">Norway</option>
+          <option value="ONT">Ontario</option>
+          <option value="PE">Peru</option>
+        </select>
+        <span id="flagDisplay"></span>
 
-        <div class="form-group">
-          <label>📊 Monthly Search Volume</label>
-          <input type="number" id="volume" placeholder="e.g., 10000" min="1">
-          <div class="input-help">How many times per month people search for this keyword</div>
-        </div>
+        <label for="valueType">Revenue Type</label>
+        <select id="valueType">
+          <option value="ngr">NGR</option>
+          <option value="turnover">Turnover</option>
+        </select>
 
-        <div class="form-group">
-          <label>🌍 Target Market</label>
-          <select id="market" onchange="setFlag()">
-            <option value="FI">Finland</option>
-            <option value="SE">Sweden</option>
-            <option value="EE">Estonia</option>
-            <option value="CA">Canada</option>
-            <option value="CL">Chile</option>
-            <option value="EC">Ecuador</option>
-            <option value="IS">Iceland</option>
-            <option value="MX">Mexico</option>
-            <option value="NO">Norway</option>
-            <option value="ONT">Ontario</option>
-            <option value="PE">Peru</option>
-          </select>
-          <div class="flag-container">
-            <span id="flagDisplay"></span>
-            <span class="market-info" id="marketInfo"></span>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>💰 Revenue Metric</label>
-          <select id="valueType">
-            <option value="ngr">NGR (Net Gaming Revenue)</option>
-            <option value="turnover">Turnover (Gross Revenue)</option>
-          </select>
-          <div class="input-help">Choose between net or gross revenue calculations</div>
-        </div>
-
-        <button class="calculate-btn" onclick="calculateRevenue()">
-          📈 Calculate Revenue Potential
-        </button>
-        
+        <button onclick="calculateRevenue()">Calculate Revenue</button>
+        <div id="spinner">⏳ Calculating...</div>
         <div class="export-buttons">
-          <button class="export-btn" onclick="exportToCSV()">
-            📄 Export CSV
-          </button>
-          <button class="export-btn" onclick="window.print()">
-            🖨️ Export PDF
-          </button>
+          <button onclick="exportToCSV()">Export CSV</button>
+          <button onclick="window.print()">Export PDF</button>
         </div>
       </div>
-
-      <div class="output-section">
-        <div class="spinner" id="spinner">
-          <div class="spinner-icon">⏳</div>
-          <div class="spinner-text">Analyzing market data and calculating projections...</div>
+      <div class="output-box">
+        <div class="summary-box" id="summaryOutput"></div>
+        <div class="tabs">
+          <div class="tab active" onclick="showTab('monthly')">Monthly</div>
+          <div class="tab" onclick="showTab('quarterly')">Quarterly</div>
         </div>
-        
-        <div id="output"></div>
-        
-        <div class="chart-container" id="chartContainer">
-          <div class="chart-title">Revenue by Search Position</div>
-          <canvas id="revenueChart"></canvas>
-        </div>
+        <div id="monthlyOutput" class="result"></div>
+        <div id="quarterlyOutput" class="result"></div>
+        <canvas id="revenueChart"></canvas>
       </div>
     </div>
   </div>
+  <script>
+    const flags = {
+      FI: "https://flagcdn.com/fi.svg",
+      SE: "https://flagcdn.com/se.svg",
+      EE: "https://flagcdn.com/ee.svg",
+      CA: "https://flagcdn.com/ca.svg",
+      CL: "https://flagcdn.com/cl.svg",
+      EC: "https://flagcdn.com/ec.svg",
+      IS: "https://flagcdn.com/is.svg",
+      MX: "https://flagcdn.com/mx.svg",
+      NO: "https://flagcdn.com/no.svg",
+      ONT: "https://flagcdn.com/ca.svg",
+      PE: "https://flagcdn.com/pe.svg"
+    };
 
-<script>
-const flags = {
-  FI: "https://flagcdn.com/fi.svg", SE: "https://flagcdn.com/se.svg", EE: "https://flagcdn.com/ee.svg",
-  CA: "https://flagcdn.com/ca.svg", CL: "https://flagcdn.com/cl.svg", EC: "https://flagcdn.com/ec.svg",
-  IS: "https://flagcdn.com/is.svg", MX: "https://flagcdn.com/mx.svg", NO: "https://flagcdn.com/no.svg",
-  ONT: "https://flagcdn.com/ca.svg", PE: "https://flagcdn.com/pe.svg"
-};
+    const data = {
+      FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
+      SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 },
+      EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
+      CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
+      CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
+      EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
+      IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
+      MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
+      NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 },
+      ONT: { ngr: -80.48, turnover: 1865.69, cr: 0.04 },
+      PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 }
+    };
 
-const marketNames = {
-  FI: "Finland", SE: "Sweden", EE: "Estonia", CA: "Canada", CL: "Chile", 
-  EC: "Ecuador", IS: "Iceland", MX: "Mexico", NO: "Norway", ONT: "Ontario", PE: "Peru"
-};
+    const visibility = [
+      { ctr: 0.30, label: "Position 1" },
+      { ctr: 0.15, label: "Position 2" },
+      { ctr: 0.10, label: "Position 3" },
+      { ctr: 0.07, label: "Position 4" },
+      { ctr: 0.05, label: "Position 5" },
+      { ctr: 0.03, label: "Positions 6–10" }
+    ];
 
-const data = {
-  FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
-  SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 },
-  EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
-  CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
-  CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
-  EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
-  IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
-  MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
-  NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 },
-  ONT: { ngr: -80.48, turnover: 1865.69, cr: 0.04 },
-  PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 }
-};
+    function setFlag() {
+      const market = document.getElementById('market').value;
+      document.getElementById('flagDisplay').innerHTML = `<img class="flag" src="${flags[market]}" alt="${market} flag">`;
+    }
 
-const visibility = [
-  { ctr: 0.30, label: "Position 1", description: "Top organic result" },
-  { ctr: 0.15, label: "Position 2", description: "Second organic result" },
-  { ctr: 0.10, label: "Position 3", description: "Third organic result" },
-  { ctr: 0.07, label: "Position 4", description: "Fourth organic result" },
-  { ctr: 0.05, label: "Position 5", description: "Fifth organic result" },
-  { ctr: 0.03, label: "Positions 6–10", description: "First page, bottom half" }
-];
+    function toggleMode() {
+      document.body.classList.toggle("light-mode");
+      document.body.classList.toggle("dark-mode");
+    }
 
-function setFlag() {
-  const market = document.getElementById('market').value;
-  const flagUrl = flags[market];
-  const marketName = marketNames[market];
-  const marketData = data[market];
-  
-  document.getElementById('flagDisplay').innerHTML = `<img class="flag" src="${flagUrl}" alt="${market} flag">`;
-  document.getElementById('marketInfo').textContent = `${marketName} • CR: ${(marketData.cr * 100).toFixed(1)}%`;
-}
-
-function toggleDarkMode() {
-  document.body.classList.toggle("dark-mode");
-}
-
-function animateCounter(element, end, duration = 1000) {
-  let start = 0;
-  const increment = end / (duration / 16);
-  
-  function update() {
-    start += increment;
-    if (start >= end) {
-      if (end >= 0) {
-        element.textContent = Math.round(end).toLocaleString() + "€";
+    function showTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelector(`.tab[onclick="showTab('${tab}')"]`).classList.add('active');
+      
+      const monthlyOutput = document.getElementById('monthlyOutput');
+      const quarterlyOutput = document.getElementById('quarterlyOutput');
+      
+      if (tab === 'monthly') {
+        monthlyOutput.style.display = 'block';
+        quarterlyOutput.style.display = 'none';
       } else {
-        element.textContent = "N/A";
-        element.style.color = "#ff6b6b";
+        monthlyOutput.style.display = 'none';
+        quarterlyOutput.style.display = 'block';
       }
-    } else {
-      element.textContent = Math.round(start).toLocaleString() + "€";
-      requestAnimationFrame(update);
     }
-  }
-  update();
-}
 
-function validateInputs() {
-  const volume = parseFloat(document.getElementById('volume').value);
-  const keyword = document.getElementById('keyword').value.trim();
-  
-  if (!keyword) {
-    alert('⚠️ Please enter a target keyword');
-    return false;
-  }
-  
-  if (isNaN(volume) || volume <= 0) {
-    alert('⚠️ Please enter a valid search volume (must be greater than 0)');
-    return false;
-  }
-  
-  if (volume > 10000000) {
-    alert('⚠️ Search volume seems too high. Please verify the number.');
-    return false;
-  }
-  
-  return true;
-}
+    function calculateRevenue() {
+      const volume = parseFloat(document.getElementById('volume').value);
+      const market = document.getElementById('market').value;
+      const valueType = document.getElementById('valueType').value;
 
-function calculateRevenue() {
-  if (!validateInputs()) return;
-  
-  const volume = parseFloat(document.getElementById('volume').value);
-  const market = document.getElementById('market').value;
-  const valueType = document.getElementById('valueType').value;
-  const keyword = document.getElementById('keyword').value.trim();
+      if (isNaN(volume) || volume <= 0) {
+        alert("Please enter a valid search volume.");
+        return;
+      }
 
-  const { cr, ngr, turnover } = data[market];
-  const aov = valueType === 'ngr' ? ngr : turnover;
+      const { cr, ngr, turnover } = data[market];
+      const aov = valueType === 'ngr' ? ngr : turnover;
 
-  const output = document.getElementById("output");
-  const spinner = document.getElementById("spinner");
-  const chartContainer = document.getElementById("chartContainer");
-  const calculateBtn = document.querySelector('.calculate-btn');
+      const monthlyOutput = document.getElementById("monthlyOutput");
+      const quarterlyOutput = document.getElementById("quarterlyOutput");
+      const summaryOutput = document.getElementById("summaryOutput");
+      const spinner = document.getElementById("spinner");
+      spinner.style.display = "block";
+      monthlyOutput.innerHTML = "";
+      quarterlyOutput.innerHTML = "";
+      summaryOutput.innerHTML = "";
 
-  // Disable button and show spinner
-  calculateBtn.disabled = true;
-  calculateBtn.textContent = "Calculating...";
-  spinner.style.display = "block";
-  output.style.display = "none";
-  chartContainer.style.display = "none";
+      const labels = [];
+      const revenues = [];
+      let totalTraffic = 0;
+      let totalConversions = 0;
+      let totalRevenue = 0;
 
-  const labels = [];
-  const revenues = [];
-
-  setTimeout(() => {
-    let html = `<div class="info-box">
-      <h3>📊 Results for "${keyword}"</h3>
-      <p>Market: ${marketNames[market]} • Volume: ${volume.toLocaleString()}/month • Metric: ${valueType.toUpperCase()}</p>
-    </div>`;
-    
-    visibility.forEach(({ ctr, label, description }, index) => {
-      const traffic = Math.round(volume * ctr);
-      const conversions = Math.round(traffic * cr);
-      const revenue = aov > 0 ? Math.round(conversions * aov) : 0;
-      
-      labels.push(label);
-      revenues.push(Math.max(0, revenue));
-      
-      html += `
-        <div class="result-item" style="animation-delay: ${index * 0.1}s">
-          <div class="result-title">${label} - ${(ctr * 100).toFixed(1)}% CTR</div>
-          <div class="result-subtitle">${description} • ${traffic.toLocaleString()} monthly visitors</div>
-          <div class="result-stats">
-            <div class="stat">
-              <div class="stat-label">Traffic</div>
-              <div class="stat-value">${traffic.toLocaleString()}</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Conversions</div>
-              <div class="stat-value">${conversions.toLocaleString()}</div>
-            </div>
-            <div class="stat">
-              <div class="stat-label">Revenue</div>
-              <div class="stat-value" id="revenue-${index}">0€</div>
-            </div>
-          </div>
-        </div>
-      `;
-    });
-
-    // Hide spinner and show results
-    spinner.style.display = "none";
-    output.style.display = "block";
-    chartContainer.style.display = "block";
-    output.innerHTML = html;
-
-    // Re-enable button
-    calculateBtn.disabled = false;
-    calculateBtn.textContent = "📈 Calculate Revenue Potential";
-
-    // Animate revenue counters
-    visibility.forEach(({ ctr }, index) => {
-      const traffic = Math.round(volume * ctr);
-      const conversions = Math.round(traffic * cr);
-      const revenue = aov > 0 ? Math.round(conversions * aov) : 0;
-      const element = document.getElementById(`revenue-${index}`);
       setTimeout(() => {
-        if (revenue > 0) {
-          animateCounter(element, revenue);
-        } else {
-          element.textContent = "N/A";
-          element.style.color = "#ff6b6b";
+        let monthlyHtml = "";
+        let quarterlyHtml = "";
+
+        visibility.forEach(({ ctr, label }, index) => {
+          const monthlyTraffic = Math.round(volume * ctr); // Original monthly calculation
+          const monthlyConv = Math.round(monthlyTraffic * cr);
+          const monthlyRev = Math.round(monthlyConv * aov);
+
+          const quarterlyTraffic = monthlyTraffic * 3; // Quarterly = Monthly * 3
+          const quarterlyConv = monthlyConv * 3;
+          const quarterlyRev = monthlyRev * 3;
+
+          totalTraffic += monthlyTraffic;
+          totalConversions += monthlyConv;
+          totalRevenue += monthlyRev;
+
+          labels.push(label);
+          revenues.push(monthlyRev);
+
+          monthlyHtml += `
+            <p>
+              <strong>${(ctr * 100).toFixed(1)}% CTR - ${label}</strong><br>
+              Traffic: <span class="blue-text">${monthlyTraffic.toLocaleString()}</span><br>
+              Conversions: <span class="blue-text">${monthlyConv.toLocaleString()}</span><br>
+              Revenue: <span class="blue-text">${monthlyRev.toLocaleString()}€</span>
+            </p>
+          `;
+
+          quarterlyHtml += `
+            <p>
+              <strong>${(ctr * 100).toFixed(1)}% CTR - ${label}</strong><br>
+              Traffic: <span class="blue-text">${quarterlyTraffic.toLocaleString()}</span><br>
+              Conversions: <span class="blue-text">${quarterlyConv.toLocaleString()}</span><br>
+              Revenue: <span class="blue-text">${quarterlyRev.toLocaleString()}€</span>
+            </p>
+          `;
+        });
+
+        summaryOutput.innerHTML = `
+          <h3>Summary (Monthly)</h3>
+          Total Traffic: <span class="blue-text">${totalTraffic.toLocaleString()}</span><br>
+          Total Conversions: <span class="blue-text">${totalConversions.toLocaleString()}</span><br>
+          Total Revenue: <span class="blue-text">${totalRevenue.toLocaleString()}€</span>
+        `;
+
+        spinner.style.display = "none";
+        monthlyOutput.style.display = "block";
+        quarterlyOutput.style.display = "none";
+        summaryOutput.style.display = "block";
+        document.getElementById("revenueChart").style.display = "block";
+        monthlyOutput.innerHTML = monthlyHtml;
+        quarterlyOutput.innerHTML = quarterlyHtml;
+
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
+          window.revenueChart.destroy();
         }
-      }, index * 100);
-    });
 
-    // Create chart
-    renderChart(labels, revenues);
-  }, 1500);
-}
-
-function renderChart(labels, revenues) {
-  const ctx = document.getElementById('revenueChart').getContext('2d');
-  
-  if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
-    window.revenueChart.destroy();
-  }
-
-  const isDarkMode = document.body.classList.contains('dark-mode');
-  
-  // Filter out zero/negative values for better chart display
-  const filteredData = labels.map((label, index) => ({
-    label: label,
-    value: Math.max(0, revenues[index])
-  })).filter(item => item.value > 0);
-
-  const chartLabels = filteredData.map(item => item.label);
-  const chartValues = filteredData.map(item => item.value);
-  
-  window.revenueChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: chartLabels,
-      datasets: [{
-        label: 'Estimated Monthly Revenue (€)',
-        data: chartValues,
-        backgroundColor: 'rgba(0, 122, 255, 0.6)',
-        borderColor: 'rgba(0, 122, 255, 1)',
-        borderWidth: 2,
-        borderRadius: 8,
-        borderSkipped: false,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { 
-          display: false 
-        },
-        tooltip: {
-          backgroundColor: isDarkMode ? 'rgba(44, 44, 46, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-          titleColor: isDarkMode ? '#f2f2f7' : '#1d1d1f',
-          bodyColor: isDarkMode ? '#f2f2f7' : '#1d1d1f',
-          borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
-          borderWidth: 1,
-          cornerRadius: 8,
-          padding: 12,
-          callbacks: {
-            label: function(context) {
-              return `Revenue: €${context.parsed.y.toLocaleString()}`;
-            }
-          }
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          grid: {
-            color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+        window.revenueChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Revenue (€)',
+              data: revenues,
+              backgroundColor: 'rgba(91, 134, 229, 0.6)',
+              borderColor: 'rgba(91, 134, 229, 1)',
+              borderWidth: 1,
+              borderRadius: 6
+            }]
           },
-          ticks: {
-            color: isDarkMode ? '#86868b' : '#86868b',
-            callback: value => '€' + value.toLocaleString(),
-            font: {
-              size: 11
-            }
-          }
-        },
-        x: {
-          grid: {
-            display: false
-          },
-          ticks: {
-            color: isDarkMode ? '#86868b' : '#86868b',
-            font: {
-              size: 11
+          options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: '#25252a',
+                titleColor: '#ffffff',
+                bodyColor: '#ffffff',
+                padding: 10,
+                cornerRadius: 6
+              }
             },
-            maxRotation: 45,
-            minRotation: 0
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  callback: value => `${value.toLocaleString()}€`,
+                  color: '#ffffff',
+                  font: { size: 10 }
+                },
+                grid: { color: '#404045' }
+              },
+              x: {
+                ticks: {
+                  color: '#ffffff',
+                  font: { size: 10 },
+                  maxRotation: 45,
+                  minRotation: 45
+                },
+                grid: { display: false }
+              }
+            }
           }
-        }
-      },
-      layout: {
-        padding: {
-          top: 10,
-          bottom: 10
-        }
-      }
+        });
+      }, 300);
     }
-  });
 
-  // Set chart height for mobile
-  const isMobile = window.innerWidth < 768;
-  document.getElementById('revenueChart').style.height = isMobile ? '250px' : '300px';
-}
+    function exportToCSV() {
+      const keyword = document.getElementById("keyword").value || "Unknown";
+      const market = document.getElementById("market").value;
+      const volume = document.getElementById("volume").value;
+      const valueType = document.getElementById("valueType").value;
+      const { cr, ngr, turnover } = data[market];
+      const aov = valueType === 'ngr' ? ngr : turnover;
 
-function exportToCSV() {
-  const output = document.getElementById("output");
-  if (!output.innerHTML) {
-    alert('⚠️ Please calculate revenue projections first');
-    return;
-  }
-  
-  const keyword = document.getElementById('keyword').value || 'Unknown';
-  const volume = document.getElementById('volume').value;
-  const market = document.getElementById('market').value;
-  const valueType = document.getElementById('valueType').value;
-  const marketName = marketNames[market];
-  
-  let csvContent = `SEO Revenue Calculator Results\n`;
-  csvContent += `Generated: ${new Date().toLocaleDateString()}\n`;
-  csvContent += `Keyword: "${keyword}"\n`;
-  csvContent += `Monthly Search Volume: ${volume}\n`;
-  csvContent += `Target Market: ${marketName} (${market})\n`;
-  csvContent += `Revenue Type: ${valueType.toUpperCase()}\n\n`;
-  csvContent += `Position,CTR (%),Monthly Traffic,Monthly Conversions,Monthly Revenue (€)\n`;
-  
-  const resultItems = output.querySelectorAll('.result-item');
-  resultItems.forEach((item, index) => {
-    const title = item.querySelector('.result-title').textContent;
-    const stats = item.querySelectorAll('.stat-value');
-    const ctr = visibility[index].ctr * 100;
-    const position = visibility[index].label;
-    csvContent += `"${position}",${ctr.toFixed(1)},${stats[0].textContent},${stats[1].textContent},"${stats[2].textContent}"\n`;
-  });
+      let csv = `Keyword,Market,Search Volume,Value Type,CTR,Position,Monthly Traffic,Monthly Conversions,Monthly Revenue,Quarterly Traffic,Quarterly Conversions,Quarterly Revenue\n`;
+      visibility.forEach(({ ctr, label }) => {
+        const monthlyTraffic = Math.round(volume * ctr);
+        const monthlyConv = Math.round(monthlyTraffic * cr);
+        const monthlyRev = Math.round(monthlyConv * aov);
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement("a");
-  const filename = `seo_revenue_${keyword.replace(/[^a-zA-Z0-9]/g, '_')}_${market}.csv`;
-  link.setAttribute("href", URL.createObjectURL(blob));
-  link.setAttribute("download", filename);
-  link.style.display = "none";
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
+        const quarterlyTraffic = monthlyTraffic * 3;
+        const quarterlyConv = monthlyConv * 3;
+        const quarterlyRev = monthlyRev * 3;
 
-// Add input validation on the fly
-document.addEventListener('DOMContentLoaded', function() {
-  setFlag();
-  
-  const volumeInput = document.getElementById('volume');
-  const keywordInput = document.getElementById('keyword');
-  
-  volumeInput.addEventListener('input', function() {
-    const value = parseInt(this.value);
-    if (value < 0) {
-      this.value = '';
+        csv += `${keyword},${market},${volume},${valueType},${(ctr * 100).toFixed(1)}%,${label},${monthlyTraffic},${monthlyConv},${monthlyRev},${quarterlyTraffic},${quarterlyConv},${quarterlyRev}\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.setAttribute("href", URL.createObjectURL(blob));
+      link.setAttribute("download", `seo_revenue_${keyword}_${market}.csv`);
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
-    if (value > 10000000) {
-      this.style.borderColor = '#ff6b6b';
-    } else {
-      this.style.borderColor = '';
-    }
-  });
-  
-  keywordInput.addEventListener('input', function() {
-    if (this.value.length > 100) {
-      this.value = this.value.substring(0, 100);
-    }
-  });
-  
-  // Add Enter key support
-  [volumeInput, keywordInput].forEach(input => {
-    input.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        calculateRevenue();
-      }
-    });
-  });
-});
 
-// Handle window resize for chart responsiveness
-window.addEventListener('resize', function() {
-  if (window.revenueChart) {
-    const isMobile = window.innerWidth < 768;
-    document.getElementById('revenueChart').style.height = isMobile ? '250px' : '300px';
-    window.revenueChart.resize();
-  }
-});
-
-// Add touch feedback for mobile
-if ('ontouchstart' in window) {
-  document.addEventListener('touchstart', function() {}, {passive: true});
-}
-</script>
+    // Initialize flag on page load
+    setFlag();
+  </script>
 </body>
 </html>
