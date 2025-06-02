@@ -7,27 +7,33 @@
         html, body {
             height: 100%;
             margin: 0;
+            font-family: Arial, sans-serif;
+            background: url('https://i.imgur.com/4e8YmHp.png') repeat;
         }
 
         body {
             display: flex;
             justify-content: center;
-            align-items: center;
-            font-family: Arial, sans-serif;
-            background-color: #fff;
+            align-items: flex-start;
+            padding: 40px 0;
         }
 
         .container {
             max-width: 600px;
             width: 100%;
             padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
             box-sizing: border-box;
+            text-align: center;
         }
 
         input, select, button {
             padding: 8px;
             margin: 5px 0;
             width: 100%;
+            color: #000;
         }
 
         .result {
@@ -35,112 +41,111 @@
             padding: 10px;
             border: 1px solid #ccc;
             text-align: left;
-        }
-
-        .result b {
-            font-weight: bold;
+            background: #fff;
+            border-radius: 5px;
         }
 
         .tooltip {
+            font-weight: bold;
             cursor: help;
-            text-decoration: underline dotted;
+            text-decoration: none;
         }
     </style>
 </head>
 <body>
-    <div class="container" style="text-align: center;">
-        <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 10px;">
-        <h2>SEO Revenue Calculator</h2>
-        <p style="margin-top: -10px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
+<div class="container">
+    <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 10px;">
+    <h2>SEO Revenue Calculator</h2>
+    <p style="margin-top: -10px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
 
-        <label>Keyword:</label>
-        <input type="text" id="keyword" placeholder="Enter keyword">
+    <label>Keyword:</label>
+    <input type="text" id="keyword" placeholder="Enter keyword">
 
-        <label>Monthly Search Volume:</label>
-        <input type="number" id="volume" placeholder="Enter search volume">
+    <label>Monthly Search Volume:</label>
+    <input type="number" id="volume" placeholder="Enter search volume">
 
-        <label>Select Market:</label>
-        <select id="market">
-            <option value="FI">Finland</option>
-            <option value="SE">Sweden</option>
-            <option value="EE">Estonia</option>
-            <option value="CA">Canada</option>
-            <option value="CL">Chile</option>
-            <option value="EC">Ecuador</option>
-            <option value="IS">Iceland</option>
-            <option value="MX">Mexico</option>
-            <option value="NO">Norway</option>
-            <option value="ONT">Ontario</option>
-            <option value="PE">Peru</option>
-        </select>
+    <label>Select Market:</label>
+    <select id="market">
+        <option value="FI">Finland</option>
+        <option value="SE">Sweden</option>
+        <option value="EE">Estonia</option>
+        <option value="CA">Canada</option>
+        <option value="CL">Chile</option>
+        <option value="EC">Ecuador</option>
+        <option value="IS">Iceland</option>
+        <option value="MX">Mexico</option>
+        <option value="NO">Norway</option>
+        <option value="ONT">Ontario</option>
+        <option value="PE">Peru</option>
+    </select>
 
-        <label>Use NGR or Turnover:</label>
-        <select id="valueType">
-            <option value="ngr">NGR</option>
-            <option value="turnover">Turnover</option>
-        </select>
+    <label>Use NGR or Turnover:</label>
+    <select id="valueType">
+        <option value="ngr">NGR</option>
+        <option value="turnover">Turnover</option>
+    </select>
 
-        <button onclick="calculateRevenue()">Calculate</button>
+    <button onclick="calculateRevenue()">Calculate</button>
 
-        <div id="output" class="result"></div>
-    </div>
+    <div id="output" class="result"></div>
+</div>
 
-    <script>
-        const data = {
-            CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
-            CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
-            EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
-            EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
-            FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
-            IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
-            MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
-            NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 },
-            ONT: { ngr: -80.48, turnover: 1865.69, cr: 0.04 },
-            PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 },
-            SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 }
-        };
+<script>
+    const data = {
+        CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
+        CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
+        EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
+        EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
+        FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
+        IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
+        MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
+        NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 },
+        ONT: { ngr: -80.48, turnover: 1865.69, cr: 0.04 },
+        PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 },
+        SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 }
+    };
 
-        const visibilityByPosition = [
-            { ctr: 0.30, label: "Position 1", tip: "Top ranking gets ~30% of search traffic" },
-            { ctr: 0.15, label: "Position 2", tip: "Second result gets ~15% of search traffic" },
-            { ctr: 0.10, label: "Position 3", tip: "Third result gets ~10% of search traffic" },
-            { ctr: 0.07, label: "Position 4", tip: "Fourth result gets ~7% of search traffic" },
-            { ctr: 0.05, label: "Position 5", tip: "Fifth result gets ~5% of search traffic" },
-            { ctr: 0.03, label: "Positions 6–10", tip: "Average CTR for results ranked 6th to 10th combined" }
-        ];
+    const visibilityByPosition = [
+        { ctr: 0.30, label: "Position 1", tip: "Top ranking gets ~30% of search traffic" },
+        { ctr: 0.15, label: "Position 2", tip: "Second result gets ~15% of search traffic" },
+        { ctr: 0.10, label: "Position 3", tip: "Third result gets ~10% of search traffic" },
+        { ctr: 0.07, label: "Position 4", tip: "Fourth result gets ~7% of search traffic" },
+        { ctr: 0.05, label: "Position 5", tip: "Fifth result gets ~5% of search traffic" },
+        { ctr: 0.03, label: "Positions 6–10", tip: "Average CTR for results ranked 6th to 10th combined" }
+    ];
 
-        function calculateRevenue() {
-            const volume = parseFloat(document.getElementById('volume').value);
-            const market = document.getElementById('market').value;
-            const valueType = document.getElementById('valueType').value;
-            const aov = data[market][valueType];
-            const cr = data[market].cr;
+    function calculateRevenue() {
+        const volume = parseFloat(document.getElementById('volume').value);
+        const market = document.getElementById('market').value;
+        const valueType = document.getElementById('valueType').value;
+        const aov = data[market][valueType];
+        const cr = data[market].cr;
 
-            if (isNaN(volume) || !market || !valueType) {
-                document.getElementById('output').innerHTML = '<b>Please fill in all fields correctly.</b>';
-                return;
-            }
-
-            let html = `<h3>Results for ${market} (${valueType.toUpperCase()}):</h3>`;
-
-            visibilityByPosition.forEach(pos => {
-                const traffic = volume * pos.ctr;
-                const conversions = traffic * cr;
-                const revenue = conversions * aov;
-
-                html += `
-                    <div style="margin-bottom: 20px;">
-                        <b class="tooltip" title="${pos.tip}">
-                            ${(pos.ctr * 100).toFixed(1)}% visibility (${pos.label})
-                        </b><br>
-                        <span style="margin-left: 10px;">Traffic: <b>${Math.round(traffic)}</b></span><br>
-                        <span style="margin-left: 10px;">Conversions: <b>${Math.round(conversions)}</b></span><br>
-                        <span style="margin-left: 10px;">Estimated Revenue: <b style="color:#007BFF;">€${Math.round(revenue)}</b></span>
-                    </div>`;
-            });
-
-            document.getElementById('output').innerHTML = html;
+        if (isNaN(volume) || !market || !valueType) {
+            document.getElementById('output').innerHTML = '<b>Please fill in all fields correctly.</b>';
+            return;
         }
-    </script>
+
+        let html = `<h3>Results for ${market} (${valueType.toUpperCase()}):</h3>`;
+
+        visibilityByPosition.forEach(pos => {
+            const traffic = volume * pos.ctr;
+            const conversions = traffic * cr;
+            const revenue = conversions * aov;
+
+            html += `
+                <div style="margin-bottom: 20px;">
+                    <b class="tooltip" title="${pos.tip}">
+                        ${(pos.ctr * 100).toFixed(1)}% visibility (${pos.label})
+                    </b><br>
+                    <span style="margin-left: 10px;">Traffic: <b>${Math.round(traffic)}</b></span><br>
+                    <span style="margin-left: 10px;">Conversions: <b>${Math.round(conversions)}</b></span><br>
+                    <span style="margin-left: 10px;">Estimated Revenue: <b style="color:#007BFF;">€${Math.round(revenue)}</b></span>
+                </div>`;
+        });
+
+        document.getElementById('output').innerHTML = html;
+    }
+</script>
 </body>
 </html>
