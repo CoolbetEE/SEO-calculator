@@ -338,20 +338,20 @@ function calculateRevenue() {
   const revenues = [];
 
   setTimeout(() => {
-    let html = "";
-    visibility.forEach(({ ctr, label }, index) => {
-      const traffic = Math.round(volume * ctr);
-      const conv = Math.round(traffic * cr);
-      const rev = Math.round(conv * aov);
-      labels.push(label);
-      revenues.push(rev);
-      html += `<p class='fade-in'>
-        <b>${(ctr * 100).toFixed(1)}% visibility (${label})</b><br>
-        Traffic: <span class='blue-text'>${traffic}</span><br>
-        Conversions: <span class='blue-text'>${conv}</span><br>
-        Estimated Revenue: <span id='rev-${index}' class='blue-text'>0€</span>
-      </p>`;
-    });
+  let html = "";
+  visibility.forEach(({ ctr, label }, index) => {
+    const traffic = Math.round(volume * ctr);
+    const conv = Math.round(traffic * cr);
+    const rev = Math.round(conv * aov);
+    labels.push(label);
+    revenues.push(rev);
+    html += `<p class='fade-in'>
+      <b>${(ctr * 100).toFixed(1)}% visibility (${label})</b><br>
+      Traffic: <span class='blue-text'>${traffic}</span><br>
+      Conversions: <span class='blue-text'>${conv}</span><br>
+      Estimated Revenue: <span id='rev-${index}' class='blue-text'>0€</span>
+    </p>`;
+  });
     document.getElementById("spinner").style.display = "none";
     document.getElementById("output").style.display = "block";
     document.getElementById("revenueChart").style.display = "block";
