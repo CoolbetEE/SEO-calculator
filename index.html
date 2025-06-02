@@ -1,190 +1,219 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SEO Revenue Calculator</title>
   <style>
-    html, body {
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+    *, *::before, *::after {
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
-      background: url('https://i.imgur.com/4e8YmHp.png') repeat;
-      transition: background 0.3s, color 0.3s;
+      box-sizing: border-box;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: inherit;
-      filter: blur(2px);
-      z-index: -1;
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #e0e7ff 0%, #f3f4f6 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      transition: background 0.3s;
     }
 
     .container {
       max-width: 1200px;
-      margin: 40px auto 80px;
-      padding: 20px;
-      background: rgba(242, 242, 245, 0.85);
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+      width: 100%;
+      margin: 40px auto;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      display: grid;
+      gap: 24px;
+    }
+
+    .header {
       text-align: center;
     }
 
-    .input-section, .output-section {
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+    .header img {
+      max-width: 180px;
+      margin-bottom: 16px;
     }
 
-    .input-section {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      flex: 1 1 280px;
-      color: white;
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1e3a8a;
+      margin-bottom: 8px;
+      transition: color 0.3s;
     }
 
-    .output-section {
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      flex: 2 1 300px;
-      color: white;
+    .header p {
+      font-size: 0.9rem;
+      color: #6b7280;
+      font-weight: 500;
+    }
+
+    .header p span {
+      color: #3b82f6;
+      font-weight: 600;
+    }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 24px;
+    }
+
+    .input-box, .output-box {
+      padding: 24px;
+      border-radius: 12px;
+      background: #f8fafc;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: background 0.3s;
+    }
+
+    .input-box {
+      background: linear-gradient(145deg, #f8fafc, #e2e8f0);
+    }
+
+    .output-box {
+      background: #ffffff;
+    }
+
+    label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+      transition: color 0.3s;
     }
 
     input, select, button {
-      padding: 12px;
-      margin: 10px 0;
       width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border: 1px solid #d1d5db;
       border-radius: 8px;
-      border: 2px solid transparent;
-      background-color: rgba(255, 255, 255, 0.9);
-      color: #333;
-      box-sizing: border-box;
-      transition: all 0.3s ease;
-      font-size: 14px;
+      font-size: 1rem;
+      background: #ffffff;
+      color: #111827;
+      transition: all 0.2s;
     }
 
-    input:focus, select:focus {
+    input:focus, select:focus, button:focus {
       outline: none;
-      border-color: #00d4aa;
-      box-shadow: 0 0 15px rgba(0, 212, 170, 0.3);
-      background-color: white;
-      transform: translateY(-2px);
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
     }
 
     button {
-      background: linear-gradient(135deg, #00d4aa 0%, #007cf0 100%);
-      color: white;
+      background: #3b82f6;
+      color: #ffffff;
+      font-weight: 600;
       cursor: pointer;
-      font-weight: bold;
       border: none;
-      transition: all 0.3s ease;
     }
 
     button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 124, 240, 0.3);
+      background: #2563eb;
     }
 
     button:active {
-      transform: translateY(0);
-    }
-
-    .result {
-      margin-top: 20px;
-      padding: 20px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      text-align: left;
-      backdrop-filter: blur(10px);
+      transform: scale(0.98);
     }
 
     .toggle-switch {
       position: relative;
       display: inline-block;
-      width: 60px;
-      height: 34px;
+      width: 50px;
+      height: 24px;
       margin-left: 12px;
       vertical-align: middle;
     }
 
-    .toggle-switch input { display: none; }
+    .toggle-switch input {
+      display: none;
+    }
 
     .slider {
       position: absolute;
-      cursor: pointer;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-      border-radius: 34px;
+      background: #d1d5db;
+      border-radius: 24px;
+      cursor: pointer;
+      transition: background 0.3s;
     }
 
     .slider:before {
       position: absolute;
       content: "";
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      transition: .4s;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background: #ffffff;
       border-radius: 50%;
+      transition: transform 0.3s;
     }
 
     input:checked + .slider {
-      background-color: #2196F3;
+      background: #3b82f6;
     }
 
     input:checked + .slider:before {
       transform: translateX(26px);
     }
 
-    h2 {
-      margin: 0;
-      background: linear-gradient(90deg, #007bff, #00ffe1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: glow 3s ease-in-out infinite;
+    .result {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      background: #f1f5f9;
+      border: 1px solid #e5e7eb;
+      text-align: left;
+      font-size: 0.9rem;
     }
 
-    @keyframes glow {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.3); }
-    }
-
-    .fade-in {
-      animation: fadeIn 0.6s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+    .result p {
+      margin-bottom: 12px;
     }
 
     .blue-text {
-      color: #00d4aa;
-      font-weight: bold;
-      text-shadow: 0 0 10px rgba(0, 212, 170, 0.3);
+      color: #3b82f6;
+      font-weight: 600;
     }
 
     #spinner {
       display: none;
-      margin: 10px auto;
+      text-align: center;
+      font-size: 1rem;
+      color: #3b82f6;
+      margin: 16px 0;
     }
 
     #export-buttons {
-      margin-top: 15px;
+      display: flex;
+      gap: 12px;
+    }
+
+    #export-buttons button {
+      flex: 1;
     }
 
     #revenueChart {
-      margin-top: 30px;
-      background: rgba(255, 255, 255, 0.1);
+      margin-top: 24px;
+      background: #ffffff;
       border-radius: 12px;
-      padding: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 0.6s ease-in-out;
-      backdrop-filter: blur(10px);
+      padding: 12px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 
     #output, #revenueChart {
@@ -195,422 +224,357 @@
       width: 24px;
       height: 16px;
       vertical-align: middle;
-      margin-left: 5px;
+      margin-left: 8px;
     }
 
-    .error-message {
-      color: #ff6b6b;
-      background: rgba(255, 107, 107, 0.1);
-      border: 1px solid rgba(255, 107, 107, 0.3);
-      padding: 12px;
-      border-radius: 8px;
-      margin: 10px 0;
-      backdrop-filter: blur(5px);
+    .error {
+      color: #dc2626;
+      font-weight: 600;
+      text-align: center;
     }
 
-    @media (max-width: 600px) {
-      .container {
-        padding: 12px;
-        margin-top: 10px;
-      }
-      
-      .main-content {
-        flex-direction: column;
-      }
-    }
-
-    .main-content {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-    }
-
-    /* DARK MODE */
+    /* Dark Mode */
     body.dark-mode {
-      background-color: #0f0f23;
+      background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
     }
 
     body.dark-mode .container {
-      background-color: rgba(15, 15, 35, 0.9);
-      color: #f1f1f1;
+      background: #1f2937;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
     }
 
-    body.dark-mode .input-section {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-      color: #e0e0e0;
+    body.dark-mode h1 {
+      color: #93c5fd;
     }
 
-    body.dark-mode .output-section {
-      background: linear-gradient(135deg, #0f3460 0%, #16537e 100%);
-      color: #e0e0e0;
+    body.dark-mode .input-box {
+      background: linear-gradient(145deg, #374151, #1f2937);
+    }
+
+    body.dark-mode .output-box {
+      background: #1e1e2e;
+    }
+
+    body.dark-mode label {
+      color: #d1d5db;
     }
 
     body.dark-mode input,
     body.dark-mode select {
-      background-color: rgba(255, 255, 255, 0.1) !important;
-      color: #e0e0e0 !important;
-      border: 2px solid rgba(255, 255, 255, 0.2) !important;
-    }
-
-    body.dark-mode input:focus,
-    body.dark-mode select:focus {
-      border-color: #00d4aa !important;
-      background-color: rgba(255, 255, 255, 0.15) !important;
+      background: #374151;
+      color: #f3f4f6;
+      border-color: #4b5563;
     }
 
     body.dark-mode button {
-      background: linear-gradient(135deg, #00d4aa 0%, #007cf0 100%) !important;
-      color: white !important;
+      background: #60a5fa;
     }
 
-    body.dark-mode label {
-      color: #e0e0e0 !important;
-      font-weight: 500;
+    body.dark-mode button:hover {
+      background: #3b82f6;
     }
 
     body.dark-mode .result {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.1);
-      color: #e0e0e0;
+      background: #374151;
+      border-color: #4b5563;
+      color: #f3f4f6;
     }
 
     body.dark-mode #revenueChart {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: rgba(255, 255, 255, 0.1);
+      background: #1e1e2e;
+      border-color: #4b5563;
     }
 
-    body.dark-mode .blue-text {
-      color: #00d4aa !important;
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .content {
+        grid-template-columns: 1fr;
+      }
+      .container {
+        margin: 16px;
+        padding: 16px;
+      }
     }
 
-    body.dark-mode .error-message {
-      background: rgba(255, 107, 107, 0.15);
-      border-color: rgba(255, 107, 107, 0.3);
-      color: #ff8a8a;
-    }
-
-    body.dark-mode h2.plain-title {
-      color: white !important;
-      -webkit-text-fill-color: white !important;
-    }
-
-    .plain-title {
-      background: none !important;
-      -webkit-background-clip: initial !important;
-      -webkit-text-fill-color: black !important;
-      color: black !important;
-      animation: none !important;
+    @media print {
+      body {
+        background: #ffffff;
+      }
+      button, .toggle-switch, img[alt="Logo"] {
+        display: none !important;
+      }
+      .container {
+        box-shadow: none;
+        margin: 0;
+        padding: 10px;
+        background: #ffffff;
+      }
+      #output, #revenueChart {
+        display: block !important;
+      }
     }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-<div class="container" id="calculatorBox">
-  <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 20px;" onerror="this.style.display='none'">
-  <div style="margin-bottom: 4px; display: flex; justify-content: center; align-items: center; gap: 10px;">
-    <h2 class="plain-title" style="margin-bottom: 0;">SEO Revenue Calculator</h2>
-    <label class="toggle-switch">
-      <input type="checkbox" onclick="toggleDarkMode()">
-      <span class="slider"></span>
-    </label>
-  </div>
-  <p style="margin-top: 4px; margin-bottom: 40px; font-size: 14px; font-weight: 600; color: #555;">by <span style="color: #007bff;">Edvard Kingissepp</span></p>
+<body onload="setFlag()">
+  <div class="container">
+    <div class="header">
+      <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 12px;">
+        <h1>SEO Revenue Calculator</h1>
+        <label class="toggle-switch">
+          <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()" aria-label="Toggle dark mode">
+          <span class="slider"></span>
+        </label>
+      </div>
+      <p>by <span>Edvard Kingissepp</span></p>
+    </div>
 
-  <div class="main-content">
-    <div class="input-section">
-      <label for="keyword">Keyword:</label>
-      <input type="text" id="keyword" placeholder="🔍 Enter keyword">
+    <div class="content">
+      <div class="input-box">
+        <label for="keyword">Keyword</label>
+        <input type="text" id="keyword" placeholder="🔍 Enter keyword">
 
-      <label for="volume">Monthly Search Volume:</label>
-      <input type="number" id="volume" placeholder="📈 Enter search volume" min="0">
+        <label for="volume">Monthly Search Volume</label>
+        <input type="number" id="volume" placeholder="📈 Enter search volume" min="0">
 
-      <label for="market">Select Market:</label>
-      <select id="market" onchange="setFlag()">
-        <option value="FI">Finland</option>
-        <option value="SE">Sweden</option>
-        <option value="EE">Estonia</option>
-        <option value="CA">Canada</option>
-        <option value="CL">Chile</option>
-        <option value="EC">Ecuador</option>
-        <option value="IS">Iceland</option>
-        <option value="MX">Mexico</option>
-        <option value="NO">Norway</option>
-        <option value="ONT">Ontario</option>
-        <option value="PE">Peru</option>
-      </select>
-      <span id="flagDisplay"></span>
+        <label for="market">Select Market</label>
+        <select id="market" onchange="setFlag()">
+          <option value="FI">Finland</option>
+          <option value="SE">Sweden</option>
+          <option value="EE">Estonia</option>
+          <option value="CA">Canada</option>
+          <option value="CL">Chile</option>
+          <option value="EC">Ecuador</option>
+          <option value="IS">Iceland</option>
+          <option value="MX">Mexico</option>
+          <option value="NO">Norway</option>
+          <option value="ONT">Ontario</option>
+          <option value="PE">Peru</option>
+        </select>
+        <span id="flagDisplay"></span>
 
-      <label for="valueType">Use NGR or Turnover:</label>
-      <select id="valueType">
-        <option value="ngr">NGR</option>
-        <option value="turnover">Turnover</option>
-      </select>
+        <label for="valueType">Use NGR or Turnover</label>
+        <select id="valueType">
+          <option value="ngr">NGR</option>
+          <option value="turnover">Turnover</option>
+        </select>
 
-      <button onclick="calculateRevenue()">Calculate</button>
-      <div id="spinner">⏳ Calculating...</div>
-      
-      <div id="export-buttons" style="display: none;">
-        <button onclick="exportToCSV()">Export CSV</button>
-        <button onclick="window.print()">Export PDF</button>
+        <button onclick="calculateRevenue()">Calculate</button>
+        <div id="spinner">⏳ Calculating...</div>
+        <div id="export-buttons">
+          <button onclick="exportToCSV()">Export CSV</button>
+          <button onclick="window.print()">Export PDF</button>
+        </div>
+      </div>
+
+      <div class="output-box">
+        <div id="output" class="result"></div>
+        <canvas id="revenueChart"></canvas>
       </div>
     </div>
-
-    <div class="output-section">
-      <div id="output" class="result"></div>
-      <canvas id="revenueChart" style="margin-top: 20px; max-width: 100%;"></canvas>
-    </div>
   </div>
-</div>
 
-<script>
-const flags = {
-  FI: "https://flagcdn.com/fi.svg", 
-  SE: "https://flagcdn.com/se.svg", 
-  EE: "https://flagcdn.com/ee.svg",
-  CA: "https://flagcdn.com/ca.svg", 
-  CL: "https://flagcdn.com/cl.svg", 
-  EC: "https://flagcdn.com/ec.svg",
-  IS: "https://flagcdn.com/is.svg", 
-  MX: "https://flagcdn.com/mx.svg", 
-  NO: "https://flagcdn.com/no.svg",
-  ONT: "https://flagcdn.com/ca.svg", 
-  PE: "https://flagcdn.com/pe.svg"
-};
+  <script>
+    const flags = {
+      FI: "https://flagcdn.com/fi.svg", SE: "https://flagcdn.com/se.svg", EE: "https://flagcdn.com/ee.svg",
+      CA: "https://flagcdn.com/ca.svg", CL: "https://flagcdn.com/cl.svg", EC: "https://flagcdn.com/ec.svg",
+      IS: "https://flagcdn.com/is.svg", MX: "https://flagcdn.com/mx.svg", NO: "https://flagcdn.com/no.svg",
+      ONT: "https://flagcdn.com/ca.svg", PE: "https://flagcdn.com/pe.svg"
+    };
 
-const data = {
-  FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
-  SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 },
-  EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
-  CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
-  CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
-  EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
-  IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
-  MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
-  NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 },
-  ONT: { ngr: -80.48, turnover: 1865.69, cr: 0.04 },
-  PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 }
-};
+    const data = {
+      FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
+      SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 },
+      EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
+      CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
+      CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
+      EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
+      IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
+      MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
+      NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 },
+      ONT: { ngr: 0, turnover: 1865.69, cr: 0.04 },
+      PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 }
+    };
 
-const visibility = [
-  { ctr: 0.30, label: "Position 1" },
-  { ctr: 0.15, label: "Position 2" },
-  { ctr: 0.10, label: "Position 3" },
-  { ctr: 0.07, label: "Position 4" },
-  { ctr: 0.05, label: "Position 5" },
-  { ctr: 0.03, label: "Positions 6–10" }
-];
+    const visibility = [
+      { ctr: 0.30, label: "Position 1" },
+      { ctr: 0.15, label: "Position 2" },
+      { ctr: 0.10, label: "Position 3" },
+      { ctr: 0.07, label: "Position 4" },
+      { ctr: 0.05, label: "Position 5" },
+      { ctr: 0.03, label: "Positions 6–10" }
+    ];
 
-// Инициализация флага при загрузке страницы
-document.addEventListener('DOMContentLoaded', function() {
-  setFlag();
-});
-
-function setFlag() {
-  const market = document.getElementById('market').value;
-  const flagImg = `<img class="flag" src="${flags[market]}" alt="flag" onerror="this.style.display='none'">`;
-  document.getElementById('flagDisplay').innerHTML = flagImg;
-}
-
-function toggleDarkMode() {
-  document.body.classList.toggle("dark-mode");
-}
-
-function showError(message) {
-  const output = document.getElementById("output");
-  output.innerHTML = `<div class="error-message">${message}</div>`;
-  output.style.display = "block";
-}
-
-function animateCounter(elementId, targetValue) {
-  const element = document.getElementById(elementId);
-  if (!element) return;
-  
-  let currentValue = 0;
-  const increment = Math.ceil(targetValue / 50);
-  const interval = setInterval(() => {
-    currentValue += increment;
-    if (currentValue >= targetValue) {
-      element.textContent = Math.round(targetValue) + "€";
-      clearInterval(interval);
-    } else {
-      element.textContent = Math.round(currentValue) + "€";
+    function setFlag() {
+      const market = document.getElementById('market').value;
+      document.getElementById('flagDisplay').innerHTML = `<img class="flag" src="${flags[market]}" alt="${market} flag">`;
     }
-  }, 20);
-}
 
-function calculateRevenue() {
-  const keyword = document.getElementById('keyword').value.trim();
-  const volume = parseFloat(document.getElementById('volume').value);
-  const market = document.getElementById('market').value;
-  const valueType = document.getElementById('valueType').value;
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
+      updateChartColors();
+    }
 
-  // Validation
-  if (!keyword) {
-    showError('Please enter a keyword');
-    return;
-  }
-
-  if (isNaN(volume) || volume <= 0) {
-    showError('Please enter a valid search volume (greater than 0)');
-    return;
-  }
-
-  if (!data[market]) {
-    showError('Selected market not found in database');
-    return;
-  }
-
-  const { cr, ngr, turnover } = data[market];
-  const aov = valueType === 'ngr' ? ngr : turnover;
-
-  // Check for negative NGR values
-  if (valueType === 'ngr' && aov < 0) {
-    showError(`Warning: NGR for ${market} is negative (${aov}€). We recommend using Turnover instead.`);
-    return;
-  }
-
-  const output = document.getElementById("output");
-  const spinner = document.getElementById("spinner");
-  const exportButtons = document.getElementById("export-buttons");
-  
-  // Show spinner
-  spinner.style.display = "block";
-  output.innerHTML = "";
-  output.style.display = "none";
-
-  const labels = [];
-  const revenues = [];
-
-  setTimeout(() => {
-    let html = `<h3>Results for "${keyword}" (${volume.toLocaleString()} searches/month)</h3>`;
-    
-    visibility.forEach(({ ctr, label }, index) => {
-      const traffic = Math.round(volume * ctr);
-      const conversions = Math.round(traffic * cr);
-      const revenue = Math.round(conversions * Math.abs(aov)); // Use absolute value for calculation
-      
-      labels.push(label);
-      revenues.push(revenue);
-      
-      html += `<div class='fade-in' style='margin-bottom: 15px; padding: 10px; border-left: 3px solid #007bff;'>
-        <strong>${(ctr * 100).toFixed(1)}% visibility (${label})</strong><br>
-        Traffic: <span class='blue-text'>${traffic.toLocaleString()}</span><br>
-        Conversions: <span class='blue-text'>${conversions.toLocaleString()}</span><br>
-        Expected Revenue: <span id='rev-${index}' class='blue-text'>0€</span>
-      </div>`;
-    });
-
-    // Hide spinner and show results
-    spinner.style.display = "none";
-    output.innerHTML = html;
-    output.style.display = "block";
-    document.getElementById("revenueChart").style.display = "block";
-    exportButtons.style.display = "block";
-
-    // Animate numbers
-    visibility.forEach(({ ctr }, index) => {
-      const traffic = Math.round(volume * ctr);
-      const conversions = Math.round(traffic * cr);
-      const revenue = Math.round(conversions * Math.abs(aov));
-      setTimeout(() => animateCounter(`rev-${index}`, revenue), index * 100);
-    });
-
-    // Create chart
-    createChart(labels, revenues);
-  }, 800);
-}
-
-function createChart(labels, revenues) {
-  const ctx = document.getElementById('revenueChart').getContext('2d');
-  
-  // Destroy previous chart if it exists
-  if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
-    window.revenueChart.destroy();
-  }
-
-  window.revenueChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Expected Revenue (€)',
-        data: revenues,
-        backgroundColor: 'rgba(0, 123, 255, 0.6)',
-        borderColor: 'rgba(0, 123, 255, 1)',
-        borderWidth: 1,
-        borderRadius: 6,
-        borderSkipped: false,
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {
-        legend: { 
-          display: true,
-          position: 'top'
-        },
-        tooltip: {
-          callbacks: {
-            label: function(context) {
-              return `Revenue: ${context.parsed.y.toLocaleString()}€`;
-            }
-          }
+    function animateCounter(id, end) {
+      let el = document.getElementById(id);
+      let start = 0;
+      const step = Math.ceil(end / 40);
+      const interval = setInterval(() => {
+        start += step;
+        if (start >= end) {
+          el.textContent = end.toLocaleString('en-US', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 });
+          clearInterval(interval);
+        } else {
+          el.textContent = start.toLocaleString('en-US', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 });
         }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: function(value) {
-              return value.toLocaleString() + "€";
-            }
-          }
-        },
-        x: {
-          ticks: {
-            maxRotation: 45
-          }
-        }
+      }, 15);
+    }
+
+    function updateChartColors() {
+      const isDarkMode = document.body.classList.contains('dark-mode');
+      if (window.revenueChart) {
+        window.revenueChart.data.datasets[0].backgroundColor = isDarkMode
+          ? 'rgba(96, 165, 250, 0.6)'
+          : 'rgba(59, 130, 246, 0.6)';
+        window.revenueChart.update();
       }
     }
-  });
-}
 
-function exportToCSV() {
-  const keyword = document.getElementById('keyword').value.trim();
-  const volume = document.getElementById('volume').value;
-  const market = document.getElementById('market').value;
-  const valueType = document.getElementById('valueType').value;
-  
-  if (!keyword || !volume) {
-    alert('Please perform calculation first');
-    return;
-  }
+    function calculateRevenue() {
+      const volume = parseFloat(document.getElementById('volume').value);
+      const market = document.getElementById('market').value;
+      const valueType = document.getElementById('valueType').value;
 
-  const { cr, ngr, turnover } = data[market];
-  const aov = valueType === 'ngr' ? ngr : turnover;
-  
-  let csvContent = "Позиция,CTR (%),Трафик,Конверсии,Доход (€)\n";
-  
-  visibility.forEach(({ ctr, label }) => {
-    const traffic = Math.round(volume * ctr);
-    const conversions = Math.round(traffic * cr);
-    const revenue = Math.round(conversions * Math.abs(aov));
-    csvContent += `"${label}",${(ctr * 100).toFixed(1)},${traffic},${conversions},${revenue}\n`;
-  });
+      if (isNaN(volume) || volume < 0) {
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('output').innerHTML = '<p class="error fade-in">Please enter a valid search volume.</p>';
+        document.getElementById('output').style.display = 'block';
+        document.getElementById('revenueChart').style.display = 'none';
+        return;
+      }
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-  const link = document.createElement("a");
-  const url = URL.createObjectURL(blob);
-  link.setAttribute("href", url);
-  link.setAttribute("download", `seo_revenue_${keyword.replace(/\s+/g, '_')}.csv`);
-  link.style.visibility = 'hidden';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
-}
-</script>
+      const { cr, ngr, turnover } = data[market];
+      const aov = valueType === 'ngr' ? ngr : turnover;
+
+      const output = document.getElementById('output');
+      document.getElementById('spinner').style.display = 'block';
+      output.innerHTML = '';
+
+      const labels = [];
+      const revenues = [];
+
+      setTimeout(() => {
+        let html = '';
+        visibility.forEach(({ ctr, label }, index) => {
+          const traffic = Math.round(volume * ctr);
+          const conv = Math.round(traffic * cr);
+          const rev = Math.round(conv * aov);
+          labels.push(label);
+          revenues.push(rev);
+          html += `
+            <p class="fade-in">
+              <b>${(ctr * 100).toFixed(1)}% Visibility (${label})</b><br>
+              Traffic: <span class="blue-text">${traffic.toLocaleString()}</span><br>
+              Conversions: <span class="blue-text">${conv.toLocaleString()}</span><br>
+              Estimated Revenue: <span id="rev-${index}" class="blue-text">0</span>
+            </p>`;
+        });
+        document.getElementById('spinner').style.display = 'none';
+        document.getElementById('output').style.display = 'block';
+        document.getElementById('revenueChart').style.display = 'block';
+        output.innerHTML = html;
+
+        visibility.forEach(({ ctr }, index) => {
+          const traffic = Math.round(volume * ctr);
+          const conv = Math.round(traffic * cr);
+          const rev = Math.round(conv * aov);
+          animateCounter(`rev-${index}`, rev);
+        });
+
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
+          window.revenueChart.destroy();
+        }
+        window.revenueChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Estimated Revenue (€)',
+              data: revenues,
+              backgroundColor: isDarkMode ? 'rgba(96, 165, 250, 0.6)' : 'rgba(59, 130, 246, 0.6)',
+              borderRadius: 8
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: isDarkMode ? '#1e1e2e' : '#ffffff',
+                titleColor: isDarkMode ? '#f3f4f6' : '#111827',
+                bodyColor: isDarkMode ? '#f3f4f6' : '#111827',
+                borderColor: isDarkMode ? '#4b5563' : '#d1d5db',
+                borderWidth: 1
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  color: isDarkMode ? '#d1d5db' : '#374151',
+                  callback: value => value.toLocaleString('en-US', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 })
+                },
+                grid: {
+                  color: isDarkMode ? '#4b5563' : '#e5e7eb'
+                }
+              },
+              x: {
+                ticks: {
+                  color: isDarkMode ? '#d1d5db' : '#374151'
+                },
+                grid: {
+                  display: false
+                }
+              }
+            }
+          }
+        });
+      }, 800);
+    }
+
+    function exportToCSV() {
+      const volume = parseFloat(document.getElementById('volume').value);
+      const market = document.getElementById('market').value;
+      const valueType = document.getElementById('valueType').value;
+
+      if (isNaN(volume) || volume < 0) {
+        alert('Please calculate revenue first with a valid search volume.');
+        return;
+      }
+
+      const { cr, ngr, turnover } = data[market];
+      const aov = valueType === 'ngr' ? ngr : turnover;
+
+      let csvContent = 'Position,Visibility (%),Traffic,Conversions,Estimated Revenue (€)\n';
+      visibility.forEach(({ ctr, label }) => {
+        const traffic = Math.round(volume * ctr);
+        const conv = Math.round(traffic * cr);
+        const rev = Math.round(conv * aov);
+        csvContent += `"${label}",${(ctr * 100).toFixed(1)},${traffic},${conv},${rev}\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.setAttribute('href', URL.createObjectURL(blob));
+      link.setAttribute('download', `seo_revenue_${market}_${valueType}.csv`);
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
 </body>
 </html>
