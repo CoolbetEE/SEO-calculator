@@ -153,16 +153,17 @@
     </style>
 </head>
 <body>
-<div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 30px; margin-top: -10px;">
-    <div style="display: flex; align-items: center; gap: 12px;">
-        <h2 style="margin: 0;">SEO Revenue Calculator</h2>
+<div class="container" id="calculatorBox">
+    <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 10px;">
+    <div style="margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;">
+        <h2 style="margin-bottom: 0;">SEO Revenue Calculator</h2>
         <label class="toggle-switch">
             <input type="checkbox" onclick="toggleDarkMode()">
             <span class="slider"></span>
         </label>
     </div>
-    <p style="margin-top: 6px; font-size: 14px; font-weight: 600; color: #444C63;">by Edvard Kingissepp</p>
-    
+    <p style="margin-top: 4px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
+
     <label>Keyword:</label>
     <input type="text" id="keyword" placeholder="🔍 Enter keyword">
 
@@ -218,7 +219,7 @@ const visibility = [
 
 function setFlag() {
     const market = document.getElementById('market').value;
-    document.getElementById('flagDisplay').innerHTML = `<img class="flag" src="${flags[market]}" alt="flag">`;
+    document.getElementById('flagDisplay').innerHTML = <img class="flag" src="${flags[market]}" alt="flag">;
 }
 
 function toggleDarkMode() {
@@ -261,12 +262,12 @@ function calculateRevenue() {
             const traffic = Math.round(volume * ctr);
             const conv = Math.round(traffic * cr);
             const rev = Math.round(conv * aov);
-            html += `<p class='fade-in'>
+            html += <p class='fade-in'>
                         <b>${(ctr * 100).toFixed(1)}% visibility (${label})</b><br>
                         Traffic: <span class='blue-text'>${traffic}</span><br>
                         Conversions: <span class='blue-text'>${conv}</span><br>
                         Estimated Revenue: <span id='rev-${index}' class='blue-text'>0€</span>
-                     </p>`;
+                     </p>;
         });
         document.getElementById("spinner").style.display = "none";
         output.innerHTML = html;
@@ -274,7 +275,7 @@ function calculateRevenue() {
             const traffic = Math.round(volume * ctr);
             const conv = Math.round(traffic * cr);
             const rev = Math.round(conv * aov);
-            animateCounter(`rev-${index}`, rev);
+            animateCounter(rev-${index}, rev);
         });
     }, 800);
 }
