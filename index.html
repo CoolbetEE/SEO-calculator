@@ -29,7 +29,7 @@
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1200px;
             width: 100%;
             padding: 20px;
             margin-top: 40px;
@@ -193,6 +193,15 @@
             color: black !important;
             animation: none !important;
         }
+        #revenueChart {
+      margin-top: 30px;
+      background: #fdfdfd;
+      border-radius: 10px;
+      padding: 10px;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+      animation: fadeIn 0.6s ease-in-out;
+  }
     </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -208,7 +217,7 @@
   <p style="margin-top: 4px; margin-bottom: 40px; font-size: 14px; font-weight: 600; color: #555;">by <span style="color: #007bff;">Edvard Kingissepp</span></p>
 
   <div style="display: flex; flex-wrap: wrap; gap: 20px;">
-    <div style="flex: 1 1 250px;">
+<div style="flex: 1 1 280px; background: #f9f9f9; padding: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.06);">
       <label>Keyword:</label>
       <input type="text" id="keyword" placeholder="🔍 Enter keyword">
 
@@ -245,7 +254,7 @@
       </div>
     </div>
 
-    <div style="flex: 2 1 300px;">
+<div style="flex: 2 1 300px; background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
       <div id="output" class="result"></div>
       <canvas id="revenueChart" style="margin-top: 20px; max-width: 100%;"></canvas>
     </div>
