@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEO Revenue Calculator</title>
     <style>
         html, body {
@@ -35,7 +36,7 @@
             background-color: #121212;
         }
 
-        .dark-mode .container {
+        .container.dark-mode {
             background-color: rgba(20, 20, 20, 0.95);
             color: white;
         }
@@ -44,6 +45,8 @@
             padding: 8px;
             margin: 5px 0;
             width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
             color: inherit;
             background-color: white;
         }
@@ -65,6 +68,11 @@
         .dark-mode .result {
             background: #222;
             border-color: #444;
+        }
+
+        .tooltip {
+            font-weight: bold;
+            cursor: help;
         }
 
         .flag {
@@ -135,6 +143,16 @@
         #export-buttons {
             margin-top: 10px;
         }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+                margin-top: 20px;
+            }
+            input, select, button {
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -156,7 +174,7 @@
     <input type="number" id="volume" placeholder="Enter search volume">
 
     <label>Select Market:</label>
-    <select id="market">
+    <select id="market" onchange="setFlag()">
         <option value="FI">Finland</option>
         <option value="SE">Sweden</option>
         <option value="EE">Estonia</option>
@@ -169,6 +187,7 @@
         <option value="ONT">Ontario</option>
         <option value="PE">Peru</option>
     </select>
+    <span id="flagDisplay"></span>
 
     <label>Use NGR or Turnover:</label>
     <select id="valueType">
@@ -186,6 +205,20 @@
     </div>
 </div>
 <script>
+const flags = {
+    FI: "https://flagcdn.com/fi.svg",
+    SE: "https://flagcdn.com/se.svg",
+    EE: "https://flagcdn.com/ee.svg",
+    CA: "https://flagcdn.com/ca.svg",
+    CL: "https://flagcdn.com/cl.svg",
+    EC: "https://flagcdn.com/ec.svg",
+    IS: "https://flagcdn.com/is.svg",
+    MX: "https://flagcdn.com/mx.svg",
+    NO: "https://flagcdn.com/no.svg",
+    ONT: "https://flagcdn.com/ca.svg",
+    PE: "https://flagcdn.com/pe.svg"
+};
+
 const data = {
     FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
     SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 },
@@ -209,8 +242,14 @@ const visibility = [
     { ctr: 0.03, label: "Positions 6–10" }
 ];
 
+function setFlag() {
+    const market = document.getElementById('market').value;
+    document.getElementById('flagDisplay').innerHTML = `<img class="flag" src="${flags[market]}" alt="flag">`;
+}
+
 function toggleDarkMode() {
     document.body.classList.toggle("dark-mode");
+    document.getElementById("calculatorBox").classList.toggle("dark-mode");
 }
 
 function animateCounter(id, end) {
