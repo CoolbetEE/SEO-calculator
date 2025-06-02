@@ -89,13 +89,26 @@
       gap: 16px;
     }
 
-    .input-box {
+    .step-box {
       background: rgba(30, 30, 35, 0.9);
       padding: 16px;
       border-radius: 12px;
       display: flex;
       flex-direction: column;
       gap: 12px;
+    }
+
+    .step-box h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .step-box p {
+      font-size: 14px;
+      color: #b0b0b5;
+      margin-bottom: 8px;
     }
 
     .output-box {
@@ -105,17 +118,16 @@
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
     }
 
-    .summary-box {
+    .explanation-box {
       background: rgba(40, 40, 45, 0.9);
       padding: 16px;
       border-radius: 12px;
       margin-bottom: 16px;
-      text-align: center;
       font-size: 14px;
       color: #b0b0b5;
     }
 
-    .summary-box h3 {
+    .explanation-box h3 {
       font-size: 16px;
       margin-bottom: 8px;
       background: linear-gradient(90deg, #5b86e5, #36d1dc);
@@ -234,15 +246,18 @@
       margin: 12px 0;
     }
 
-    #revenueChart {
+    #revenueGauge {
       margin-top: 16px;
       background: rgba(25, 25, 30, 0.95);
       border-radius: 12px;
       padding: 12px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      max-width: 300px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    #monthlyOutput, #quarterlyOutput, #revenueChart {
+    #monthlyOutput, #quarterlyOutput, #revenueGauge {
       display: none;
     }
 
@@ -367,7 +382,7 @@
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
 
-    body.light-mode .input-box {
+    body.light-mode .step-box {
       background: rgba(245, 245, 247, 0.9);
     }
 
@@ -375,7 +390,7 @@
       background: rgba(255, 255, 255, 0.95);
     }
 
-    body.light-mode .summary-box {
+    body.light-mode .explanation-box {
       background: rgba(245, 245, 247, 0.9);
       color: #1d1d1f;
     }
@@ -402,7 +417,7 @@
       color: #1d1d1f;
     }
 
-    body.light-mode #revenueChart {
+    body.light-mode #revenueGauge {
       background: rgba(255, 255, 255, 0.95);
     }
 
@@ -460,13 +475,23 @@
       </div>
     </div>
     <div class="content">
-      <div class="input-box">
+      <div class="step-box">
+        <h3>Step 1: Enter Your Keyword</h3>
+        <p>The keyword you want to rank for (e.g., "best running shoes").</p>
         <label for="keyword">Keyword</label>
         <input type="text" id="keyword" placeholder="Enter keyword">
+      </div>
 
+      <div class="step-box">
+        <h3>Step 2: Enter Monthly Search Volume</h3>
+        <p>The number of searches for your keyword per month (e.g., 10,000).</p>
         <label for="volume">Monthly Search Volume</label>
         <input type="number" id="volume" placeholder="Enter search volume">
+      </div>
 
+      <div class="step-box">
+        <h3>Step 3: Select Market</h3>
+        <p>Choose the market where you’re targeting your audience.</p>
         <label for="market">Select Market</label>
         <select id="market" onchange="setFlag()">
           <option value="FI">Finland</option>
@@ -482,13 +507,35 @@
           <option value="PE">Peru</option>
         </select>
         <span id="flagDisplay"></span>
+      </div>
 
+      <div class="step-box">
+        <h3>Step 4: Select Position</h3>
+        <p>Choose the search engine position you expect to rank at (e.g., Position 1 has a 30% click-through rate).</p>
+        <label for="position">Select Position</label>
+        <select id="position">
+          <option value="0">Position 1 (30% CTR)</option>
+          <option value="1">Position 2 (15% CTR)</option>
+          <option value="2">Position 3 (10% CTR)</option>
+          <option value="3">Position 4 (7% CTR)</option>
+          <option value="4">Position 5 (5% CTR)</option>
+          <option value="5">Positions 6–10 (3% CTR)</option>
+        </select>
+      </div>
+
+      <div class="step-box">
+        <h3>Step 5: Select Revenue Type</h3>
+        <p>Choose whether to calculate based on Net Gaming Revenue (NGR) or Turnover.</p>
         <label for="valueType">Revenue Type</label>
         <select id="valueType">
           <option value="ngr">NGR</option>
           <option value="turnover">Turnover</option>
         </select>
+      </div>
 
+      <div class="step-box">
+        <h3>Step 6: Calculate</h3>
+        <p>Click the button below to see your estimated revenue.</p>
         <button onclick="calculateRevenue()">Calculate Revenue</button>
         <div id="spinner">⏳ Calculating...</div>
         <div class="export-buttons">
@@ -496,15 +543,25 @@
           <button onclick="window.print()">Export PDF</button>
         </div>
       </div>
+
       <div class="output-box">
-        <div class="summary-box" id="summaryOutput"></div>
+        <div class="explanation-box">
+          <h3>How We Calculate Your Revenue</h3>
+          <p>We use the following steps to estimate your revenue:</p>
+          <ul>
+            <li><strong>Traffic:</strong> Monthly Search Volume × Click-Through Rate (CTR) for your selected position.</li>
+            <li><strong>Conversions:</strong> Traffic × Conversion Rate (specific to your market).</li>
+            <li><strong>Revenue:</strong> Conversions × Average Order Value (NGR or Turnover, depending on your selection).</li>
+            <li><strong>Quarterly:</strong> Monthly results are multiplied by 3 to estimate a quarter (3 months).</li>
+          </ul>
+        </div>
         <div class="tabs">
           <div class="tab active" onclick="showTab('monthly')">Monthly</div>
           <div class="tab" onclick="showTab('quarterly')">Quarterly</div>
         </div>
         <div id="monthlyOutput" class="result"></div>
         <div id="quarterlyOutput" class="result"></div>
-        <canvas id="revenueChart"></canvas>
+        <canvas id="revenueGauge"></canvas>
       </div>
     </div>
   </div>
@@ -566,15 +623,18 @@
       if (tab === 'monthly') {
         monthlyOutput.style.display = 'block';
         quarterlyOutput.style.display = 'none';
+        renderGaugeChart(window.lastMonthlyRevenue);
       } else {
         monthlyOutput.style.display = 'none';
         quarterlyOutput.style.display = 'block';
+        renderGaugeChart(window.lastQuarterlyRevenue);
       }
     }
 
     function calculateRevenue() {
       const volume = parseFloat(document.getElementById('volume').value);
       const market = document.getElementById('market').value;
+      const positionIndex = parseInt(document.getElementById('position').value);
       const valueType = document.getElementById('valueType').value;
 
       if (isNaN(volume) || volume <= 0) {
@@ -582,144 +642,18 @@
         return;
       }
 
+      const { ctr, label } = visibility[positionIndex];
       const { cr, ngr, turnover } = data[market];
       const aov = valueType === 'ngr' ? ngr : turnover;
 
       const monthlyOutput = document.getElementById("monthlyOutput");
       const quarterlyOutput = document.getElementById("quarterlyOutput");
-      const summaryOutput = document.getElementById("summaryOutput");
       const spinner = document.getElementById("spinner");
       spinner.style.display = "block";
       monthlyOutput.innerHTML = "";
       quarterlyOutput.innerHTML = "";
-      summaryOutput.innerHTML = "";
-
-      const labels = [];
-      const revenues = [];
-      let totalTraffic = 0;
-      let totalConversions = 0;
-      let totalRevenue = 0;
 
       setTimeout(() => {
-        let monthlyHtml = "";
-        let quarterlyHtml = "";
-
-        visibility.forEach(({ ctr, label }, index) => {
-          const monthlyTraffic = Math.round(volume * ctr); // Original monthly calculation
-          const monthlyConv = Math.round(monthlyTraffic * cr);
-          const monthlyRev = Math.round(monthlyConv * aov);
-
-          const quarterlyTraffic = monthlyTraffic * 3; // Quarterly = Monthly * 3
-          const quarterlyConv = monthlyConv * 3;
-          const quarterlyRev = monthlyRev * 3;
-
-          totalTraffic += monthlyTraffic;
-          totalConversions += monthlyConv;
-          totalRevenue += monthlyRev;
-
-          labels.push(label);
-          revenues.push(monthlyRev);
-
-          monthlyHtml += `
-            <p>
-              <strong>${(ctr * 100).toFixed(1)}% CTR - ${label}</strong><br>
-              Traffic: <span class="blue-text">${monthlyTraffic.toLocaleString()}</span><br>
-              Conversions: <span class="blue-text">${monthlyConv.toLocaleString()}</span><br>
-              Revenue: <span class="blue-text">${monthlyRev.toLocaleString()}€</span>
-            </p>
-          `;
-
-          quarterlyHtml += `
-            <p>
-              <strong>${(ctr * 100).toFixed(1)}% CTR - ${label}</strong><br>
-              Traffic: <span class="blue-text">${quarterlyTraffic.toLocaleString()}</span><br>
-              Conversions: <span class="blue-text">${quarterlyConv.toLocaleString()}</span><br>
-              Revenue: <span class="blue-text">${quarterlyRev.toLocaleString()}€</span>
-            </p>
-          `;
-        });
-
-        summaryOutput.innerHTML = `
-          <h3>Summary (Monthly)</h3>
-          Total Traffic: <span class="blue-text">${totalTraffic.toLocaleString()}</span><br>
-          Total Conversions: <span class="blue-text">${totalConversions.toLocaleString()}</span><br>
-          Total Revenue: <span class="blue-text">${totalRevenue.toLocaleString()}€</span>
-        `;
-
-        spinner.style.display = "none";
-        monthlyOutput.style.display = "block";
-        quarterlyOutput.style.display = "none";
-        summaryOutput.style.display = "block";
-        document.getElementById("revenueChart").style.display = "block";
-        monthlyOutput.innerHTML = monthlyHtml;
-        quarterlyOutput.innerHTML = quarterlyHtml;
-
-        const ctx = document.getElementById('revenueChart').getContext('2d');
-        if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
-          window.revenueChart.destroy();
-        }
-
-        window.revenueChart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: labels,
-            datasets: [{
-              label: 'Revenue (€)',
-              data: revenues,
-              backgroundColor: 'rgba(91, 134, 229, 0.6)',
-              borderColor: 'rgba(91, 134, 229, 1)',
-              borderWidth: 1,
-              borderRadius: 6
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-              legend: { display: false },
-              tooltip: {
-                backgroundColor: '#25252a',
-                titleColor: '#ffffff',
-                bodyColor: '#ffffff',
-                padding: 10,
-                cornerRadius: 6
-              }
-            },
-            scales: {
-              y: {
-                beginAtZero: true,
-                ticks: {
-                  callback: value => `${value.toLocaleString()}€`,
-                  color: '#ffffff',
-                  font: { size: 10 }
-                },
-                grid: { color: '#404045' }
-              },
-              x: {
-                ticks: {
-                  color: '#ffffff',
-                  font: { size: 10 },
-                  maxRotation: 45,
-                  minRotation: 45
-                },
-                grid: { display: false }
-              }
-            }
-          }
-        });
-      }, 300);
-    }
-
-    function exportToCSV() {
-      const keyword = document.getElementById("keyword").value || "Unknown";
-      const market = document.getElementById("market").value;
-      const volume = document.getElementById("volume").value;
-      const valueType = document.getElementById("valueType").value;
-      const { cr, ngr, turnover } = data[market];
-      const aov = valueType === 'ngr' ? ngr : turnover;
-
-      let csv = `Keyword,Market,Search Volume,Value Type,CTR,Position,Monthly Traffic,Monthly Conversions,Monthly Revenue,Quarterly Traffic,Quarterly Conversions,Quarterly Revenue\n`;
-      visibility.forEach(({ ctr, label }) => {
         const monthlyTraffic = Math.round(volume * ctr);
         const monthlyConv = Math.round(monthlyTraffic * cr);
         const monthlyRev = Math.round(monthlyConv * aov);
@@ -728,8 +662,102 @@
         const quarterlyConv = monthlyConv * 3;
         const quarterlyRev = monthlyRev * 3;
 
-        csv += `${keyword},${market},${volume},${valueType},${(ctr * 100).toFixed(1)}%,${label},${monthlyTraffic},${monthlyConv},${monthlyRev},${quarterlyTraffic},${quarterlyConv},${quarterlyRev}\n`;
+        window.lastMonthlyRevenue = monthlyRev;
+        window.lastQuarterlyRevenue = quarterlyRev;
+
+        monthlyOutput.innerHTML = `
+          <p>
+            <strong>${(ctr * 100).toFixed(1)}% CTR - ${label}</strong><br>
+            Traffic: <span class="blue-text">${monthlyTraffic.toLocaleString()}</span><br>
+            Conversions: <span class="blue-text">${monthlyConv.toLocaleString()}</span><br>
+            Revenue: <span class="blue-text">${monthlyRev.toLocaleString()}€</span>
+          </p>
+        `;
+
+        quarterlyOutput.innerHTML = `
+          <p>
+            <strong>${(ctr * 100).toFixed(1)}% CTR - ${label}</strong><br>
+            Traffic: <span class="blue-text">${quarterlyTraffic.toLocaleString()}</span><br>
+            Conversions: <span class="blue-text">${quarterlyConv.toLocaleString()}</span><br>
+            Revenue: <span class="blue-text">${quarterlyRev.toLocaleString()}€</span>
+          </p>
+        `;
+
+        spinner.style.display = "none";
+        monthlyOutput.style.display = "block";
+        quarterlyOutput.style.display = "none";
+        document.getElementById("revenueGauge").style.display = "block";
+
+        renderGaugeChart(monthlyRev);
+      }, 300);
+    }
+
+    function renderGaugeChart(revenue) {
+      const ctx = document.getElementById('revenueGauge').getContext('2d');
+      if (window.revenueGauge && typeof window.revenueGauge.destroy === 'function') {
+        window.revenueGauge.destroy();
+      }
+
+      const maxRevenue = 50000;
+      const percentage = Math.min((revenue / maxRevenue) * 100, 100);
+      const remaining = 100 - percentage;
+
+      window.revenueGauge = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          datasets: [{
+            data: [percentage, remaining],
+            backgroundColor: ['#5b86e5', '#404045'],
+            borderWidth: 0,
+            borderRadius: 10,
+            circumference: 180,
+            rotation: 270
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          cutout: '80%',
+          plugins: {
+            legend: { display: false },
+            tooltip: { enabled: false }
+          }
+        }
       });
+
+      const gaugeLabel = document.createElement('div');
+      gaugeLabel.style.position = 'absolute';
+      gaugeLabel.style.top = '70%';
+      gaugeLabel.style.left = '50%';
+      gaugeLabel.style.transform = 'translateX(-50%)';
+      gaugeLabel.style.color = '#ffffff';
+      gaugeLabel.style.fontSize = '14px';
+      gaugeLabel.style.fontWeight = '600';
+      gaugeLabel.innerText = `${revenue.toLocaleString()}€`;
+      document.getElementById('revenueGauge').parentNode.style.position = 'relative';
+      document.getElementById('revenueGauge').parentNode.appendChild(gaugeLabel);
+    }
+
+    function exportToCSV() {
+      const keyword = document.getElementById("keyword").value || "Unknown";
+      const market = document.getElementById("market").value;
+      const volume = document.getElementById("volume").value;
+      const positionIndex = parseInt(document.getElementById("position").value);
+      const valueType = document.getElementById("valueType").value;
+      const { ctr, label } = visibility[positionIndex];
+      const { cr, ngr, turnover } = data[market];
+      const aov = valueType === 'ngr' ? ngr : turnover;
+
+      const monthlyTraffic = Math.round(volume * ctr);
+      const monthlyConv = Math.round(monthlyTraffic * cr);
+      const monthlyRev = Math.round(monthlyConv * aov);
+
+      const quarterlyTraffic = monthlyTraffic * 3;
+      const quarterlyConv = monthlyConv * 3;
+      const quarterlyRev = monthlyRev * 3;
+
+      let csv = `Keyword,Market,Search Volume,Value Type,CTR,Position,Monthly Traffic,Monthly Conversions,Monthly Revenue,Quarterly Traffic,Quarterly Conversions,Quarterly Revenue\n`;
+      csv += `${keyword},${market},${volume},${valueType},${(ctr * 100).toFixed(1)}%,${label},${monthlyTraffic},${monthlyConv},${monthlyRev},${quarterlyTraffic},${quarterlyConv},${quarterlyRev}\n`;
 
       const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement("a");
