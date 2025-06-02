@@ -3,31 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <title>SEO Revenue Calculator</title>
-    <script src="https://apis.google.com/js/api.js"></script>
     <style>
         html, body {
             height: 100%;
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: url('https://i.imgur.com/4e8YmHp.png') repeat;
         }
 
         body {
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            padding: 40px 0;
+            font-family: Arial, sans-serif;
+            background: url('https://i.imgur.com/4e8YmHp.png') repeat;
         }
 
         .container {
             max-width: 600px;
             width: 100%;
             padding: 20px;
+            margin-top: 40px;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.4);
             box-sizing: border-box;
             text-align: center;
+        }
+
+        .title-wrapper {
+            margin: 20px 0;
         }
 
         input, select, button {
@@ -56,8 +59,11 @@
 <body>
 <div class="container">
     <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 10px;">
-    <h2>SEO Revenue Calculator</h2>
-    <p style="margin-top: -10px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
+
+    <div class="title-wrapper">
+        <h2>SEO Revenue Calculator</h2>
+        <p style="margin-top: -10px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
+    </div>
 
     <label id="labelKeyword">Keyword:</label>
     <input type="text" id="keyword" placeholder="Enter keyword">
@@ -92,17 +98,10 @@
 
 <script>
     const translations = {
-        FI: { keyword: "Hakusana:", volume: "Hakumäärä kuukaudessa:", market: "Valitse maa:", type: "Käytä NGR tai Turnover" },
-        SE: { keyword: "Nyckelord:", volume: "Sökvolym per månad:", market: "Välj marknad:", type: "Använd NGR eller Turnover" },
-        EE: { keyword: "Märksõna:", volume: "Igakuine otsingumaht:", market: "Vali turg:", type: "Kasuta NGR või Käive" },
-        CA: { keyword: "Keyword:", volume: "Monthly Search Volume:", market: "Select Market:", type: "Use NGR or Turnover:" },
-        CL: { keyword: "Palabra clave:", volume: "Volumen de búsqueda mensual:", market: "Selecciona mercado:", type: "Usar NGR o Turnover:" },
-        EC: { keyword: "Palabra clave:", volume: "Volumen mensual:", market: "Selecciona país:", type: "Usar NGR o Turnover:" },
-        IS: { keyword: "Lykilorð:", volume: "Mánaðarleg leit:", market: "Veldu markað:", type: "Nota NGR eða Turnover:" },
-        MX: { keyword: "Palabra clave:", volume: "Volumen de búsqueda:", market: "Selecciona mercado:", type: "Usar NGR o Turnover:" },
-        NO: { keyword: "Søkeord:", volume: "Søkevolum per måned:", market: "Velg marked:", type: "Bruk NGR eller Turnover" },
-        ONT: { keyword: "Keyword:", volume: "Monthly Search Volume:", market: "Select Market:", type: "Use NGR or Turnover:" },
-        PE: { keyword: "Palabra clave:", volume: "Volumen mensual:", market: "Selecciona país:", type: "Usar NGR o Turnover:" }
+        FI: { keyword: "Hakusana:", volume: "Hakumäärä kuukaudessa:", market: "Valitse maa:", type: "Käytä NGR tai Turnover", results: "Tulokset", visibility: "näkymä", traffic: "Liikenne", conversions: "Konversiot", revenue: "Arvioitu tulo" },
+        SE: { keyword: "Nyckelord:", volume: "Sökvolym per månad:", market: "Välj marknad:", type: "Använd NGR eller Turnover", results: "Resultat", visibility: "synlighet", traffic: "Trafik", conversions: "Konverteringar", revenue: "Uppskattad intäkt" },
+        EE: { keyword: "Märksõna:", volume: "Igakuine otsingumaht:", market: "Vali turg:", type: "Kasuta NGR või Käive", results: "Tulemused", visibility: "nähtavus", traffic: "Liiklus", conversions: "Konversioonid", revenue: "Hinnanguline tulu" },
+        default: { results: "Results", visibility: "visibility", traffic: "Traffic", conversions: "Conversions", revenue: "Estimated Revenue" }
     };
 
     const data = {
@@ -144,13 +143,14 @@
         const valueType = document.getElementById('valueType').value;
         const aov = data[market][valueType];
         const cr = data[market].cr;
+        const lang = translations[market] || translations.default;
 
         if (isNaN(volume) || !market || !valueType) {
             document.getElementById('output').innerHTML = '<b>Please fill in all fields correctly.</b>';
             return;
         }
 
-        let html = `<h3>Results for ${market} (${valueType.toUpperCase()}):</h3>`;
+        let html = `<h3>${lang.results} (${market} - ${valueType.toUpperCase()}):</h3>`;
 
         visibilityByPosition.forEach(pos => {
             const traffic = volume * pos.ctr;
@@ -160,11 +160,11 @@
             html += `
                 <div style="margin-bottom: 20px;">
                     <b class="tooltip" title="${pos.tip}">
-                        ${(pos.ctr * 100).toFixed(1)}% visibility (${pos.label})
+                        ${(pos.ctr * 100).toFixed(1)}% ${lang.visibility} (${pos.label})
                     </b><br>
-                    <span style="margin-left: 10px;">Traffic: <b>${Math.round(traffic)}</b></span><br>
-                    <span style="margin-left: 10px;">Conversions: <b>${Math.round(conversions)}</b></span><br>
-                    <span style="margin-left: 10px;">Estimated Revenue: <b style="color:#007BFF;">€${Math.round(revenue)}</b></span>
+                    <span>${lang.traffic}: <b>${Math.round(traffic)}</b></span><br>
+                    <span>${lang.conversions}: <b>${Math.round(conversions)}</b></span><br>
+                    <span>${lang.revenue}: <b style="color:#007BFF;">€${Math.round(revenue)}</b></span>
                 </div>`;
         });
 
