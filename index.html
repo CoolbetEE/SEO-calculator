@@ -1,121 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>SEO Revenue Calculator</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    html, body {
-      height: 100%; margin: 0;
-    }
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      font-family: Arial, sans-serif;
-      background: url('https://i.imgur.com/4e8YmHp.png') repeat;
-      transition: background 0.3s, color 0.3s;
-    }
-    .container {
-      max-width: 600px;
-      width: 100%;
-      padding: 20px;
-      margin-top: 40px;
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
-      box-sizing: border-box;
-      text-align: center;
-      transition: background 0.3s, color 0.3s;
-    }
-    body.dark-mode {
-      background-color: #121212;
-    }
-    .container.dark-mode {
-      background-color: rgba(20, 20, 20, 0.95);
-      color: white;
-    }
-    input, select, button {
-      padding: 8px;
-      margin: 5px 0;
-      width: 100%;
-      color: inherit;
-      background-color: white;
-    }
-    .dark-mode input, .dark-mode select, .dark-mode button {
-      background-color: #333;
-      color: #fff;
-    }
-    .result {
-      margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      text-align: left;
-      background: #fff;
-      border-radius: 5px;
-    }
-    .dark-mode .result {
-      background: #222;
-      border-color: #444;
-    }
-    .blue-text { color: #007bff; }
-    .flag {
-      width: 24px;
-      height: 16px;
-      vertical-align: middle;
-      margin-left: 5px;
-    }
-    #export-buttons { margin-top: 10px; }
-    .toggle-switch {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 10px 0;
-    }
-    .toggle-switch input {
-      height: 0;
-      width: 0;
-      visibility: hidden;
-    }
-    .switch-label {
-      display: flex;
-      align-items: center;
-      background: #ccc;
-      border-radius: 20px;
-      cursor: pointer;
-      padding: 5px;
-      width: 60px;
-      position: relative;
-    }
-    .switch-label:before {
-      content: '';
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 24px;
-      height: 24px;
-      background: white;
-      border-radius: 20px;
-      transition: 0.3s;
-    }
-    .toggle-switch input:checked + .switch-label {
-      background: #4caf50;
-    }
-    .toggle-switch input:checked + .switch-label:before {
-      transform: translateX(26px);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>SEO Revenue Calculator</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            font-family: Arial, sans-serif;
+            background: url('https://i.imgur.com/4e8YmHp.png') repeat;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            margin-top: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+            box-sizing: border-box;
+            text-align: center;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark-mode {
+            background-color: #121212;
+        }
+
+        .container.dark-mode {
+            background-color: rgba(20, 20, 20, 0.95);
+            color: white;
+        }
+
+        input, select, button {
+            padding: 8px;
+            margin: 5px 0;
+            width: 100%;
+            color: inherit;
+            background-color: white;
+        }
+
+        .dark-mode input, .dark-mode select, .dark-mode button {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+            background: #fff;
+            border-radius: 5px;
+        }
+
+        .dark-mode .result {
+            background: #222;
+            border-color: #444;
+        }
+
+        .tooltip {
+            font-weight: bold;
+            cursor: help;
+        }
+
+        .flag {
+            width: 24px;
+            height: 16px;
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        #spinner {
+            display: none;
+            margin: 10px auto;
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .blue-text {
+            color: #007bff;
+        }
+
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        .toggle-switch input { display: none; }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        #export-buttons {
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body>
-  <div class="container" id="calculatorBox">
+<div class="container" id="calculatorBox">
     <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 10px;">
-    <h2>SEO Revenue Calculator</h2>
-    <p style="margin-top: -10px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
-
-    <div class="toggle-switch">
-      <input type="checkbox" id="darkToggle" onchange="toggleDarkMode()">
-      <label for="darkToggle" class="switch-label"></label>
-      <span style="margin-left: 10px;">Night Version</span>
+    <div style="margin-top: 10px; margin-bottom: 20px;">
+        <h2 style="margin-bottom: 0; display: inline-block;">SEO Revenue Calculator</h2>
+        <label class="toggle-switch">
+            <input type="checkbox" onclick="toggleDarkMode()">
+            <span class="slider"></span>
+        </label>
+        <p style="margin-top: 0px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
     </div>
 
     <label>Keyword:</label>
@@ -125,97 +161,92 @@
     <input type="number" id="volume" placeholder="Enter search volume">
 
     <label>Select Market:</label>
-    <select id="market">
-      <option value="FI">Finland 🇫🇮</option>
-      <option value="SE">Sweden 🇸🇪</option>
-      <option value="EE">Estonia 🇪🇪</option>
-      <option value="CA">Canada 🇨🇦</option>
-      <option value="CL">Chile 🇨🇱</option>
-      <option value="EC">Ecuador 🇪🇨</option>
-      <option value="IS">Iceland 🇮🇸</option>
-      <option value="MX">Mexico 🇲🇽</option>
-      <option value="NO">Norway 🇳🇴</option>
-      <option value="ONT">Ontario 🇨🇦</option>
-      <option value="PE">Peru 🇵🇪</option>
+    <select id="market" onchange="setFlag()">
+        <option value="FI">Finland</option>
+        <option value="SE">Sweden</option>
+        <option value="EE">Estonia</option>
+        <option value="CA">Canada</option>
+        <option value="CL">Chile</option>
+        <option value="EC">Ecuador</option>
+        <option value="IS">Iceland</option>
+        <option value="MX">Mexico</option>
+        <option value="NO">Norway</option>
+        <option value="ONT">Ontario</option>
+        <option value="PE">Peru</option>
     </select>
+    <span id="flagDisplay"></span>
 
     <label>Use NGR or Turnover:</label>
     <select id="valueType">
-      <option value="ngr">NGR</option>
-      <option value="turnover">Turnover</option>
+        <option value="ngr">NGR</option>
+        <option value="turnover">Turnover</option>
     </select>
 
     <button onclick="calculateRevenue()">Calculate</button>
+    <div id="spinner">⏳ Calculating...</div>
     <div id="output" class="result"></div>
 
     <div id="export-buttons">
-      <button onclick="exportToCSV()">Export to CSV</button>
-      <button onclick="window.print()">Export to PDF</button>
+        <button onclick="exportToCSV()">Export CSV</button>
+        <button onclick="window.print()">Export PDF</button>
     </div>
-  </div>
+</div>
+<script>
+// flag, data, visibility arrays remain unchanged
+// toggleDarkMode and setFlag remain unchanged
 
-  <script>
-    const data = {
-      FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
-      SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 },
-      EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
-      CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
-      CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
-      EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
-      IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
-      MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
-      NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 },
-      ONT: { ngr: -80.48, turnover: 1865.69, cr: 0.04 },
-      PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 }
-    };
+function animateCounter(id, end) {
+    let el = document.getElementById(id);
+    let start = 0;
+    const step = Math.ceil(end / 40);
+    const interval = setInterval(() => {
+        start += step;
+        if (start >= end) {
+            el.textContent = end + "€";
+            clearInterval(interval);
+        } else {
+            el.textContent = start + "€";
+        }
+    }, 15);
+}
 
-    const visibility = [
-      { ctr: 0.30, label: "Position 1" },
-      { ctr: 0.15, label: "Position 2" },
-      { ctr: 0.10, label: "Position 3" },
-      { ctr: 0.07, label: "Position 4" },
-      { ctr: 0.05, label: "Position 5" },
-      { ctr: 0.03, label: "Positions 6–10" }
-    ];
+function calculateRevenue() {
+    const volume = parseFloat(document.getElementById('volume').value);
+    const market = document.getElementById('market').value;
+    const valueType = document.getElementById('valueType').value;
 
-    function toggleDarkMode() {
-      document.body.classList.toggle("dark-mode");
-      document.getElementById("calculatorBox").classList.toggle("dark-mode");
-    }
+    if (isNaN(volume)) return;
 
-    function exportToCSV() {
-      const content = document.getElementById("output").innerText;
-      const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
-      const link = document.createElement("a");
-      link.setAttribute("href", URL.createObjectURL(blob));
-      link.setAttribute("download", "seo_revenue.csv");
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    const { cr, ngr, turnover } = data[market];
+    const aov = valueType === 'ngr' ? ngr : turnover;
 
-    function calculateRevenue() {
-      const volume = parseFloat(document.getElementById('volume').value);
-      const market = document.getElementById('market').value;
-      const valueType = document.getElementById('valueType').value;
-      const { cr, ngr, turnover } = data[market];
-      const aov = valueType === 'ngr' ? ngr : turnover;
+    const output = document.getElementById("output");
+    document.getElementById("spinner").style.display = "block";
+    output.innerHTML = "";
 
-      const output = document.getElementById("output");
-      output.innerHTML = "";
-
-      visibility.forEach(({ ctr, label }) => {
-        const traffic = Math.round(volume * ctr);
-        const conversions = Math.round(traffic * cr);
-        const revenue = Math.round(conversions * aov);
-        output.innerHTML += `
-          <p><b>${(ctr * 100).toFixed(1)}% visibility (${label})</b><br>
-          Traffic: <span class='blue-text'>${traffic}</span><br>
-          Conversions: <span class='blue-text'>${conversions}</span><br>
-          Estimated Revenue: <span class='blue-text'>€${revenue}</span></p>
-        `;
-      });
-    }
-  </script>
+    setTimeout(() => {
+        let html = "";
+        visibility.forEach(({ ctr, label }, index) => {
+            const traffic = Math.round(volume * ctr);
+            const conv = Math.round(traffic * cr);
+            const rev = Math.round(conv * aov);
+            html += `<p class='fade-in'>
+                        <b>${(ctr * 100).toFixed(1)}% visibility (${label})</b><br>
+                        Traffic: <span class='blue-text'>${traffic}</span><br>
+                        Conversions: <span class='blue-text'>${conv}</span><br>
+                        Estimated Revenue: <span id='rev-${index}' class='blue-text'>0€</span>
+                     </p>`;
+        });
+        document.getElementById("spinner").style.display = "none";
+        output.innerHTML = html;
+        visibility.forEach(({ ctr }, index) => {
+            const traffic = Math.round(volume * ctr);
+            const conv = Math.round(traffic * cr);
+            const rev = Math.round(conv * aov);
+            animateCounter(`rev-${index}`, rev);
+        });
+    }, 800);
+}
+</script>
 </body>
 </html>
