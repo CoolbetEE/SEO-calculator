@@ -1,11 +1,11 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>SEO Revenue Calculator</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; }
-        input, button { padding: 8px; margin: 5px 0; width: 100%; }
+        input, select, button { padding: 8px; margin: 5px 0; width: 100%; }
         .result { margin-top: 20px; padding: 10px; border: 1px solid #ccc; }
     </style>
 </head>
@@ -18,29 +18,60 @@
     <label>Monthly Search Volume:</label>
     <input type="number" id="volume" placeholder="Enter search volume">
 
-    <label>Average Order Value (AOV):</label>
-    <input type="number" id="aov" value="100">
+    <label>Select Market:</label>
+    <select id="market">
+        <option value="FI">Finland</option>
+        <option value="SE">Sweden</option>
+        <option value="EE">Estonia</option>
+        <option value="CA">Canada</option>
+        <option value="CL">Chile</option>
+        <option value="EC">Ecuador</option>
+        <option value="IS">Iceland</option>
+        <option value="MX">Mexico</option>
+        <option value="NO">Norway</option>
+        <option value="ONT">Ontario</option>
+        <option value="PE">Peru</option>
+    </select>
 
-    <label>Conversion Rate (CR) (e.g., 0.04 for 4%):</label>
-    <input type="number" id="cr" value="0.04" step="0.01">
+    <label>Use NGR or Turnover:</label>
+    <select id="valueType">
+        <option value="ngr">NGR</option>
+        <option value="turnover">Turnover</option>
+    </select>
 
     <button onclick="calculateRevenue()">Calculate</button>
 
     <div id="output" class="result"></div>
 
     <script>
+        const data = {
+            CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
+            CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
+            EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
+            EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
+            FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
+            IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
+            MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
+            NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 },
+            ONT: { ngr: -80.48, turnover: 1865.69, cr: 0.04 },
+            PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 },
+            SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 }
+        };
+
         function calculateRevenue() {
             const volume = parseFloat(document.getElementById('volume').value);
-            const aov = parseFloat(document.getElementById('aov').value);
-            const cr = parseFloat(document.getElementById('cr').value);
+            const market = document.getElementById('market').value;
+            const valueType = document.getElementById('valueType').value;
+            const aov = data[market][valueType];
+            const cr = data[market].cr;
 
-            if (isNaN(volume) || isNaN(aov) || isNaN(cr)) {
+            if (isNaN(volume) || !market || !valueType) {
                 document.getElementById('output').innerHTML = '<b>Please fill in all fields correctly.</b>';
                 return;
             }
 
             const percentages = [0.3, 0.15, 0.1, 0.07, 0.05];
-            let html = '<h3>Results:</h3>';
+            let html = `<h3>Results for ${market} (${valueType.toUpperCase()}):</h3>`;
 
             percentages.forEach(p => {
                 const traffic = volume * p;
