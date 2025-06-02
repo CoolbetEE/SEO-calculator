@@ -28,6 +28,7 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.4);
             box-sizing: border-box;
             text-align: center;
+            color: #000;
             transition: background 0.3s, color 0.3s;
         }
 
@@ -35,7 +36,7 @@
             background-color: #121212;
         }
 
-        .container.dark-mode {
+        .dark-mode .container {
             background-color: rgba(20, 20, 20, 0.95);
             color: white;
         }
@@ -72,6 +73,22 @@
             vertical-align: middle;
             margin-left: 5px;
         }
+
+        .spinner {
+            display: none;
+            margin: 10px auto;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -104,22 +121,33 @@
     </select>
     <span id="flagDisplay"></span>
 
-    <label id="labelType">Use NGR or Turnover:</label>
+    <label id="labelType">Use:</label>
     <select id="valueType">
         <option value="ngr">NGR</option>
         <option value="turnover">Turnover</option>
+        <option value="sportsbook">Sportsbook Bets</option>
+        <option value="casino">Casino Bets</option>
     </select>
 
     <button onclick="calculateRevenue()">Calculate</button>
+    <div class="spinner" id="spinner"></div>
     <div id="output" class="result"></div>
+    <button onclick="exportCSV()">Export to CSV</button>
 </div>
 
 <script>
-    const translations = {
-        FI: { keyword: "Hakusana:", volume: "Hakumäärä kuukaudessa:", market: "Valitse maa:", type: "Käytä NGR tai Turnover", results: "Tulokset", visibility: "Näkymus", traffic: "Liikenne", conversions: "Konversiot", revenue: "Tulot" },
-        SE: { keyword: "Nyckelord:", volume: "Sökvolym per månad:", market: "Välj marknad:", type: "Använd NGR eller Turnover", results: "Resultat", visibility: "Synlighet", traffic: "Trafik", conversions: "Konverteringar", revenue: "Intäkter" },
-        EE: { keyword: "Märksõna:", volume: "Igakuine otsingumaht:", market: "Vali turg:", type: "Kasuta NGR või Käivet", results: "Tulemused", visibility: "Nähtavus", traffic: "Liiklus", conversions: "Konversioonid", revenue: "Tulu" },
-        default: { results: "Results", visibility: "Visibility", traffic: "Traffic", conversions: "Conversions", revenue: "Estimated Revenue" }
+    const data = {
+        CA: { ngr: 35.26, turnover: 2578.08, sportsbook: 1401.85, casino: 1173.8, cr: 0.04 },
+        CL: { ngr: 27.54, turnover: 531.64, sportsbook: 144.53, casino: 386.44, cr: 0.03 },
+        EC: { ngr: 16.62, turnover: 484.91, sportsbook: 327.17, casino: 156.12, cr: 0.03 },
+        EE: { ngr: 44.22, turnover: 1267.34, sportsbook: 225.71, casino: 1041.06, cr: 0.05 },
+        FI: { ngr: 62.75, turnover: 1616.56, sportsbook: 530.6, casino: 1084.55, cr: 0.05 },
+        IS: { ngr: 78.94, turnover: 1869.87, sportsbook: 466.65, casino: 1402.43, cr: 0.05 },
+        MX: { ngr: 6.85, turnover: 497.3, sportsbook: 211.21, casino: 284.02, cr: 0.03 },
+        NO: { ngr: 117.41, turnover: 2757.3, sportsbook: 621.42, casino: 2133.82, cr: 0.05 },
+        ONT: { ngr: -80.48, turnover: 1865.69, sportsbook: 776.33, casino: 1089.36, cr: 0.04 },
+        PE: { ngr: 26.14, turnover: 443.48, sportsbook: 228.63, casino: 212.56, cr: 0.03 },
+        SE: { ngr: 46.27, turnover: 1324.77, sportsbook: 557.57, casino: 765.66, cr: 0.05 }
     };
 
     const flags = {
@@ -136,20 +164,6 @@
         PE: "https://flagcdn.com/pe.svg"
     };
 
-    const data = {
-        CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
-        CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
-        EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
-        EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
-        FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
-        IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
-        MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
-        NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 },
-        ONT: { ngr: -80.48, turnover: 1865.69, cr: 0.04 },
-        PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 },
-        SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 }
-    };
-
     const visibilityByPosition = [
         { ctr: 0.30, label: "Position 1", tip: "Top ranking gets ~30% of search traffic" },
         { ctr: 0.15, label: "Position 2", tip: "Second result gets ~15% of search traffic" },
@@ -159,13 +173,9 @@
         { ctr: 0.03, label: "Positions 6–10", tip: "Average CTR for results ranked 6th to 10th combined" }
     ];
 
-    function updateLanguage() {
-        const lang = document.getElementById('market').value;
-        const t = translations[lang] || translations.default;
-        document.getElementById('labelKeyword').innerText = t.keyword;
-        document.getElementById('labelVolume').innerText = t.volume;
-        document.getElementById('labelMarket').innerText = t.market;
-        document.getElementById('labelType').innerText = t.type;
+    function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        document.getElementById("calculatorBox").classList.toggle("dark-mode");
     }
 
     function setFlag() {
@@ -174,43 +184,39 @@
         document.getElementById('flagDisplay').innerHTML = `<img class="flag" src="${flag}" alt="${market} flag">`;
     }
 
-    function toggleDarkMode() {
-        document.body.classList.toggle("dark-mode");
-        document.getElementById("calculatorBox").classList.toggle("dark-mode");
+    function calculateRevenue() {
+        document.getElementById('spinner').style.display = 'block';
+        setTimeout(() => {
+            const volume = parseFloat(document.getElementById('volume').value);
+            const market = document.getElementById('market').value;
+            const valueType = document.getElementById('valueType').value;
+            const aov = data[market][valueType];
+            const cr = data[market].cr;
+            let html = `<h3>Results (${market} - ${valueType.toUpperCase()}):</h3>`;
+            visibilityByPosition.forEach(pos => {
+                const traffic = volume * pos.ctr;
+                const conversions = traffic * cr;
+                const revenue = conversions * aov;
+                html += `<div style="margin-bottom: 20px;">
+                    <b class="tooltip" title="${pos.tip}">${(pos.ctr * 100).toFixed(1)}% visibility (${pos.label})</b><br>
+                    Traffic: <b>${Math.round(traffic)}</b><br>
+                    Conversions: <b>${Math.round(conversions)}</b><br>
+                    Estimated Revenue: <b style="color:#007BFF;">€${Math.round(revenue)}</b>
+                </div>`;
+            });
+            document.getElementById('output').innerHTML = html;
+            document.getElementById('spinner').style.display = 'none';
+        }, 700);
     }
 
-    function calculateRevenue() {
-        const volume = parseFloat(document.getElementById('volume').value);
-        const market = document.getElementById('market').value;
-        const valueType = document.getElementById('valueType').value;
-        const aov = data[market][valueType];
-        const cr = data[market].cr;
-        const lang = translations[market] || translations.default;
-
-        if (isNaN(volume) || !market || !valueType) {
-            document.getElementById('output').innerHTML = '<b>Please fill in all fields correctly.</b>';
-            return;
-        }
-
-        let html = `<h3>${lang.results} (${market} - ${valueType.toUpperCase()}):</h3>`;
-
-        visibilityByPosition.forEach(pos => {
-            const traffic = volume * pos.ctr;
-            const conversions = traffic * cr;
-            const revenue = conversions * aov;
-
-            html += `
-                <div style="margin-bottom: 20px;">
-                    <b class="tooltip" title="${pos.tip}">
-                        ${(pos.ctr * 100).toFixed(1)}% ${lang.visibility} (${pos.label})
-                    </b><br>
-                    ${lang.traffic}: <b>${Math.round(traffic)}</b><br>
-                    ${lang.conversions}: <b>${Math.round(conversions)}</b><br>
-                    ${lang.revenue}: <b style="color:#007BFF;">€${Math.round(revenue)}</b>
-                </div>`;
-        });
-
-        document.getElementById('output').innerHTML = html;
+    function exportCSV() {
+        const content = document.getElementById('output').innerText;
+        const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", "seo_revenue_report.csv");
+        link.click();
     }
 </script>
 </body>
