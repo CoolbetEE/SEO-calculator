@@ -29,7 +29,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 900px;
             width: 100%;
             padding: 20px;
             margin-top: 40px;
@@ -196,56 +196,61 @@
     </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-  <div class="container" id="calculatorBox">
-    <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 20px;">
-    <div style="margin-bottom: 4px; display: flex; justify-content: center; align-items: center; gap: 10px;">
-      <h2 class="plain-title" style="margin-bottom: 0;">SEO Revenue Calculator</h2>
-      <label class="toggle-switch">
-        <input type="checkbox" onclick="toggleDarkMode()">
-        <span class="slider"></span>
-      </label>
+<div class="container" id="calculatorBox">
+  <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 20px;">
+  <div style="margin-bottom: 4px; display: flex; justify-content: center; align-items: center; gap: 10px;">
+    <h2 class="plain-title" style="margin-bottom: 0;">SEO Revenue Calculator</h2>
+    <label class="toggle-switch">
+      <input type="checkbox" onclick="toggleDarkMode()">
+      <span class="slider"></span>
+    </label>
+  </div>
+  <p style="margin-top: 4px; margin-bottom: 40px; font-size: 14px; font-weight: 600; color: #555;">by <span style="color: #007bff;">Edvard Kingissepp</span></p>
+
+  <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    <div style="flex: 1 1 250px;">
+      <label>Keyword:</label>
+      <input type="text" id="keyword" placeholder="🔍 Enter keyword">
+
+      <label>Monthly Search Volume:</label>
+      <input type="number" id="volume" placeholder="📈 Enter search volume">
+
+      <label>Select Market:</label>
+      <select id="market" onchange="setFlag()">
+        <option value="FI">Finland</option>
+        <option value="SE">Sweden</option>
+        <option value="EE">Estonia</option>
+        <option value="CA">Canada</option>
+        <option value="CL">Chile</option>
+        <option value="EC">Ecuador</option>
+        <option value="IS">Iceland</option>
+        <option value="MX">Mexico</option>
+        <option value="NO">Norway</option>
+        <option value="ONT">Ontario</option>
+        <option value="PE">Peru</option>
+      </select>
+      <span id="flagDisplay"></span>
+
+      <label>Use NGR or Turnover:</label>
+      <select id="valueType">
+        <option value="ngr">NGR</option>
+        <option value="turnover">Turnover</option>
+      </select>
+
+      <button onclick="calculateRevenue()">Calculate</button>
+      <div id="spinner">⏳ Calculating...</div>
+      <div id="export-buttons">
+        <button onclick="exportToCSV()">Export CSV</button>
+        <button onclick="window.print()">Export PDF</button>
+      </div>
     </div>
-    <p style="margin-top: 4px; margin-bottom: 60px; font-size: 14px; font-weight: 600; color: #555;">by <span style="color: #007bff;">Edvard Kingissepp</span></p>
 
-    <label>Keyword:</label>
-    <input type="text" id="keyword" placeholder="🔍 Enter keyword">
-
-    <label>Monthly Search Volume:</label>
-    <input type="number" id="volume" placeholder="📈 Enter search volume">
-
-    <label>Select Market:</label>
-    <select id="market" onchange="setFlag()">
-      <option value="FI">Finland</option>
-      <option value="SE">Sweden</option>
-      <option value="EE">Estonia</option>
-      <option value="CA">Canada</option>
-      <option value="CL">Chile</option>
-      <option value="EC">Ecuador</option>
-      <option value="IS">Iceland</option>
-      <option value="MX">Mexico</option>
-      <option value="NO">Norway</option>
-      <option value="ONT">Ontario</option>
-      <option value="PE">Peru</option>
-    </select>
-    <span id="flagDisplay"></span>
-
-    <label>Use NGR or Turnover:</label>
-    <select id="valueType">
-      <option value="ngr">NGR</option>
-      <option value="turnover">Turnover</option>
-    </select>
-
-    <button onclick="calculateRevenue()">Calculate</button>
-    <div id="spinner">⏳ Calculating...</div>
-    <div id="output" class="result"></div>
-    <canvas id="revenueChart" style="margin-top: 20px;"></canvas>
-
-    <div id="export-buttons">
-      <button onclick="exportToCSV()">Export CSV</button>
-      <button onclick="window.print()">Export PDF</button>
+    <div style="flex: 2 1 300px;">
+      <div id="output" class="result"></div>
+      <canvas id="revenueChart" style="margin-top: 20px; max-width: 100%;"></canvas>
     </div>
   </div>
+</div>
 
 <script>
 const flags = {
