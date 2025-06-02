@@ -346,7 +346,9 @@ function calculateRevenue() {
 
     // Chart rendering
     const ctx = document.getElementById('revenueChart').getContext('2d');
-    if (window.revenueChart) window.revenueChart.destroy(); // prevent duplicates
+    if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
+  window.revenueChart.destroy();
+}
     window.revenueChart = new Chart(ctx, {
       type: 'bar',
       data: {
