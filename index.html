@@ -15,6 +15,7 @@
             align-items: flex-start;
             font-family: Arial, sans-serif;
             background: url('https://i.imgur.com/4e8YmHp.png') repeat;
+            transition: background 0.3s, color 0.3s;
         }
 
         .container {
@@ -27,17 +28,23 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.4);
             box-sizing: border-box;
             text-align: center;
+            transition: background 0.3s, color 0.3s;
         }
 
-        .title-wrapper {
-            margin: 20px 0;
+        body.dark-mode {
+            background-color: #121212;
+        }
+
+        .container.dark-mode {
+            background-color: rgba(20, 20, 20, 0.95);
+            color: white;
         }
 
         input, select, button {
             padding: 8px;
             margin: 5px 0;
             width: 100%;
-            color: #000;
+            color: inherit;
         }
 
         .result {
@@ -49,21 +56,31 @@
             border-radius: 5px;
         }
 
+        .dark-mode .result {
+            background: #222;
+            border-color: #444;
+        }
+
         .tooltip {
             font-weight: bold;
             cursor: help;
-            text-decoration: none;
+        }
+
+        .flag {
+            width: 24px;
+            height: 16px;
+            vertical-align: middle;
+            margin-left: 5px;
         }
     </style>
 </head>
 <body>
-<div class="container">
+<div class="container" id="calculatorBox">
     <img src="https://i.imgur.com/xpnQzsh.png" alt="Logo" style="max-width: 200px; margin-bottom: 10px;">
+    <h2 style="margin-bottom: 0;">SEO Revenue Calculator</h2>
+    <p style="margin-top: 0px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
 
-    <div class="title-wrapper">
-        <h2>SEO Revenue Calculator</h2>
-        <p style="margin-top: -10px; font-size: 12px; color: gray;">by Edvard Kingissepp</p>
-    </div>
+    <button onclick="toggleDarkMode()">🌙 Toggle Theme</button>
 
     <label id="labelKeyword">Keyword:</label>
     <input type="text" id="keyword" placeholder="Enter keyword">
@@ -72,7 +89,7 @@
     <input type="number" id="volume" placeholder="Enter search volume">
 
     <label id="labelMarket">Select Market:</label>
-    <select id="market">
+    <select id="market" onchange="setFlag(); updateLanguage();">
         <option value="FI">Finland</option>
         <option value="SE">Sweden</option>
         <option value="EE">Estonia</option>
@@ -85,6 +102,7 @@
         <option value="ONT">Ontario</option>
         <option value="PE">Peru</option>
     </select>
+    <span id="flagDisplay"></span>
 
     <label id="labelType">Use NGR or Turnover:</label>
     <select id="valueType">
@@ -98,10 +116,24 @@
 
 <script>
     const translations = {
-        FI: { keyword: "Hakusana:", volume: "Hakumäärä kuukaudessa:", market: "Valitse maa:", type: "Käytä NGR tai Turnover", results: "Tulokset", visibility: "näkymä", traffic: "Liikenne", conversions: "Konversiot", revenue: "Arvioitu tulo" },
-        SE: { keyword: "Nyckelord:", volume: "Sökvolym per månad:", market: "Välj marknad:", type: "Använd NGR eller Turnover", results: "Resultat", visibility: "synlighet", traffic: "Trafik", conversions: "Konverteringar", revenue: "Uppskattad intäkt" },
-        EE: { keyword: "Märksõna:", volume: "Igakuine otsingumaht:", market: "Vali turg:", type: "Kasuta NGR või Käive", results: "Tulemused", visibility: "nähtavus", traffic: "Liiklus", conversions: "Konversioonid", revenue: "Hinnanguline tulu" },
-        default: { results: "Results", visibility: "visibility", traffic: "Traffic", conversions: "Conversions", revenue: "Estimated Revenue" }
+        FI: { keyword: "Hakusana:", volume: "Hakumäärä kuukaudessa:", market: "Valitse maa:", type: "Käytä NGR tai Turnover", results: "Tulokset", visibility: "Näkymus", traffic: "Liikenne", conversions: "Konversiot", revenue: "Tulot" },
+        SE: { keyword: "Nyckelord:", volume: "Sökvolym per månad:", market: "Välj marknad:", type: "Använd NGR eller Turnover", results: "Resultat", visibility: "Synlighet", traffic: "Trafik", conversions: "Konverteringar", revenue: "Intäkter" },
+        EE: { keyword: "Märksõna:", volume: "Igakuine otsingumaht:", market: "Vali turg:", type: "Kasuta NGR või Käivet", results: "Tulemused", visibility: "Nähtavus", traffic: "Liiklus", conversions: "Konversioonid", revenue: "Tulu" },
+        default: { results: "Results", visibility: "Visibility", traffic: "Traffic", conversions: "Conversions", revenue: "Estimated Revenue" }
+    };
+
+    const flags = {
+        FI: "https://flagcdn.com/fi.svg",
+        SE: "https://flagcdn.com/se.svg",
+        EE: "https://flagcdn.com/ee.svg",
+        CA: "https://flagcdn.com/ca.svg",
+        CL: "https://flagcdn.com/cl.svg",
+        EC: "https://flagcdn.com/ec.svg",
+        IS: "https://flagcdn.com/is.svg",
+        MX: "https://flagcdn.com/mx.svg",
+        NO: "https://flagcdn.com/no.svg",
+        ONT: "https://flagcdn.com/ca.svg",
+        PE: "https://flagcdn.com/pe.svg"
     };
 
     const data = {
@@ -127,15 +159,25 @@
         { ctr: 0.03, label: "Positions 6–10", tip: "Average CTR for results ranked 6th to 10th combined" }
     ];
 
-    document.getElementById('market').addEventListener('change', () => {
+    function updateLanguage() {
         const lang = document.getElementById('market').value;
-        if (translations[lang]) {
-            document.getElementById('labelKeyword').innerText = translations[lang].keyword;
-            document.getElementById('labelVolume').innerText = translations[lang].volume;
-            document.getElementById('labelMarket').innerText = translations[lang].market;
-            document.getElementById('labelType').innerText = translations[lang].type;
-        }
-    });
+        const t = translations[lang] || translations.default;
+        document.getElementById('labelKeyword').innerText = t.keyword;
+        document.getElementById('labelVolume').innerText = t.volume;
+        document.getElementById('labelMarket').innerText = t.market;
+        document.getElementById('labelType').innerText = t.type;
+    }
+
+    function setFlag() {
+        const market = document.getElementById('market').value;
+        const flag = flags[market];
+        document.getElementById('flagDisplay').innerHTML = `<img class="flag" src="${flag}" alt="${market} flag">`;
+    }
+
+    function toggleDarkMode() {
+        document.body.classList.toggle("dark-mode");
+        document.getElementById("calculatorBox").classList.toggle("dark-mode");
+    }
 
     function calculateRevenue() {
         const volume = parseFloat(document.getElementById('volume').value);
@@ -162,9 +204,9 @@
                     <b class="tooltip" title="${pos.tip}">
                         ${(pos.ctr * 100).toFixed(1)}% ${lang.visibility} (${pos.label})
                     </b><br>
-                    <span>${lang.traffic}: <b>${Math.round(traffic)}</b></span><br>
-                    <span>${lang.conversions}: <b>${Math.round(conversions)}</b></span><br>
-                    <span>${lang.revenue}: <b style="color:#007BFF;">€${Math.round(revenue)}</b></span>
+                    ${lang.traffic}: <b>${Math.round(traffic)}</b><br>
+                    ${lang.conversions}: <b>${Math.round(conversions)}</b><br>
+                    ${lang.revenue}: <b style="color:#007BFF;">€${Math.round(revenue)}</b>
                 </div>`;
         });
 
