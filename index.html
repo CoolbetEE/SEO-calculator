@@ -832,7 +832,7 @@ const data = {
   SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 },
   EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
   CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
-  CL: { ngr: 27.54, turnout: 531.64, cr: 0.03 },
+  CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
   EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
   IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
   MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
@@ -1057,12 +1057,19 @@ function calculateRevenue() {
     calculateBtn.textContent = "📈 Calculate Revenue Potential";
 
     visibility.forEach((_, index) => {
-      animateCounter(document.getElementById(`monthly-traffic-${index}`), monthlyRevenues[index] / (aov > 0 ? aov : 1) * visibility[index].ctr * volume);
-      animateCounter(document.getElementById(`monthly-conversions-${index}`), monthlyRevenues[index] / (aov > 0 ? aov : 1));
-      animateCounter(document.getElementById(`monthly-revenue-${index}`), monthlyRevenues[index]);
-      animateCounter(document.getElementById(`quarterly-traffic-${index}`), quarterlyRevenues[index] / (aov > 0 ? aov : 1) * visibility[index].ctr * volume * 3);
-      animateCounter(document.getElementById(`quarterly-conversions-${index}`), quarterlyRevenues[index] / (aov > 0 ? aov : 1));
-      animateCounter(document.getElementById(`quarterly-revenue-${index}`), quarterlyRevenues[index]);
+      const monthlyTraffic = Math.round(volume * visibility[index].ctr);
+      const monthlyConv = Math.round(monthlyTraffic * data[market].cr);
+      const monthlyRev = monthlyRevenues[index];
+      const quarterlyTraffic = monthlyTraffic * 3;
+      const quarterlyConv = monthlyConv * 3;
+      const quarterlyRev = quarterlyRevenues[index];
+
+      animateCounter(document.getElementById(`monthly-traffic-${index}`), monthlyTraffic);
+      animateCounter(document.getElementById(`monthly-conversions-${index}`), monthlyConv);
+      animateCounter(document.getElementById(`monthly-revenue-${index}`), monthlyRev);
+      animateCounter(document.getElementById(`quarterly-traffic-${index}`), quarterlyTraffic);
+      animateCounter(document.getElementById(`quarterly-conversions-${index}`), quarterlyConv);
+      animateCounter(document.getElementById(`quarterly-revenue-${index}`), quarterlyRev);
     });
 
     const keywordData = { keyword, volume };
@@ -1184,12 +1191,19 @@ function loadHistoryEntry(index) {
   }
 
   visibility.forEach((_, i) => {
-    animateCounter(document.getElementById(`monthly-traffic-${i}`), entry.monthlyRevenues[i] / (Math.abs(data[entry.market][entry.valueType]) > 0 ? Math.abs(data[entry.market][entry.valueType]) : 1) * visibility[i].ctr * entry.keywordData.volume);
-    animateCounter(document.getElementById(`monthly-conversions-${i}`), entry.monthlyRevenues[i] / (Math.abs(data[entry.market][entry.valueType]) > 0 ? Math.abs(data[entry.market][entry.valueType]) : 1));
-    animateCounter(document.getElementById(`monthly-revenue-${i}`), entry.monthlyRevenues[i]);
-    animateCounter(document.getElementById(`quarterly-traffic-${i}`), entry.quarterlyRevenues[i] / (Math.abs(data[entry.market][entry.valueType]) > 0 ? Math.abs(data[entry.market][entry.valueType]) : 1) * visibility[i].ctr * entry.keywordData.volume * 3);
-    animateCounter(document.getElementById(`quarterly-conversions-${i}`), entry.quarterlyRevenues[i] / (Math.abs(data[entry.market][entry.valueType]) > 0 ? Math.abs(data[entry.market][entry.valueType]) : 1));
-    animateCounter(document.getElementById(`quarterly-revenue-${i}`), entry.quarterlyRevenues[i]);
+    const monthlyTraffic = Math.round(entry.keywordData.volume * visibility[i].ctr);
+    const monthlyConv = Math.round(monthlyTraffic * data[entry.market].cr);
+    const monthlyRev = entry.monthlyRevenues[i];
+    const quarterlyTraffic = monthlyTraffic * 3;
+    const quarterlyConv = monthlyConv * 3;
+    const quarterlyRev = entry.quarterlyRevenues[i];
+
+    animateCounter(document.getElementById(`monthly-traffic-${i}`), monthlyTraffic);
+    animateCounter(document.getElementById(`monthly-conversions-${i}`), monthlyConv);
+    animateCounter(document.getElementById(`monthly-revenue-${i}`), monthlyRev);
+    animateCounter(document.getElementById(`quarterly-traffic-${i}`), quarterlyTraffic);
+    animateCounter(document.getElementById(`quarterly-conversions-${i}`), quarterlyConv);
+    animateCounter(document.getElementById(`quarterly-revenue-${i}`), quarterlyRev);
   });
 }
 
