@@ -408,11 +408,23 @@
       width: 100%;
     }
 
+    .pie-chart-container {
+      margin-top: 16px;
+      background: rgba(25, 25, 30, 0.95);
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      width: 100%;
+      max-width: 300px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .chart-title {
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: #ffffff;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       text-align: center;
     }
 
@@ -553,6 +565,11 @@
       border-color: rgba(0, 0, 0, 0.06);
     }
 
+    body.light-mode .pie-chart-container {
+      background: rgba(255, 255, 255, 0.6);
+      border-color: rgba(0, 0, 0, 0.06);
+    }
+
     body.light-mode .export-btn {
       background: rgba(0, 0, 0, 0.04);
       border-color: rgba(0, 0, 0, 0.1);
@@ -686,6 +703,10 @@
         padding: 16px;
         font-size: 1rem;
       }
+
+      .pie-chart-container {
+        max-width: 250px;
+      }
     }
 
     @media (max-width: 360px) {
@@ -699,6 +720,10 @@
 
       .form-group {
         margin-bottom: 16px;
+      }
+
+      .pie-chart-container {
+        max-width: 200px;
       }
     }
   </style>
@@ -765,7 +790,7 @@
 
         <div class="form-group">
           <label>💰 Revenue Metric</label>
-          <select id="valueType">
+          <select id="valueType" onchange="updatePieChart()">
             <option value="ngr">NGR (Net Gaming Revenue)</option>
             <option value="turnover">Turnover</option>
           </select>
@@ -808,6 +833,11 @@
         <div class="chart-container" id="chartContainer">
           <div class="chart-title">Revenue by Search Position</div>
           <canvas id="revenueChart"></canvas>
+        </div>
+
+        <div class="pie-chart-container" id="pieChartContainer">
+          <div class="chart-title">Revenue Split: Sportsbook vs Casino</div>
+          <canvas id="pieChart"></canvas>
         </div>
       </div>
     </div>
@@ -864,6 +894,7 @@ function setFlag() {
  
   document.getElementById('flagDisplay').innerHTML = `<img class="flag" src="${flagUrl}" alt="${market} flag">`;
   document.getElementById('marketInfo').textContent = `${marketName} • CR: ${(marketData.cr * 100).toFixed(1)}%`;
+  updatePieChart();
 }
 
 function updateSelectStyles(isDarkMode) {
@@ -891,6 +922,10 @@ function toggleDarkMode() {
   if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
     window.revenueChart.destroy();
     renderChart(window.lastKeywordData || {});
+  }
+  if (window.pieChart && typeof window.pieChart.destroy === 'function') {
+    window.pieChart.destroy();
+    updatePieChart();
   }
 }
 
@@ -1179,6 +1214,7 @@ function calculateRevenue() {
     window.lastCasinoQuarterlyRevenues = casinoQuarterlyRevenues;
     window.lastSportsbookQuarterlyRevenues = sportsbookQuarterlyRevenues;
     renderChart(keywordData);
+    updatePieChart();
 
     addToHistory({
       market,
@@ -1251,6 +1287,65 @@ function renderChart(keywordData, isQuarterly = false, category = null) {
   });
 }
 
+function updatePieChart() {
+  const ctx = document.getElementById('pieChart').getContext('2d');
+  if (window.pieChart && typeof window.pieChart.destroy === 'function') {
+    window.pieChart.destroy();
+  }
+
+  const market = document.getElementById('market').value;
+  const valueType = document.getElementById('valueType').value;
+  const marketData = data[market];
+  const total = Math.abs(valueType === 'ngr' ? marketData.ngr : marketData.turnover);
+  const sportsbook = Math.abs(valueType === 'ngr' ? marketData.sportsbook_ngr : marketData.turnover);
+  const casino = Math.abs(valueType === 'ngr' ? marketData.casino_ngr : marketData.turnover);
+
+  const sportsbookPercentage = total > 0 ? (sportsbook / total) * 100 : 0;
+  const casinoPercentage = total > 0 ? (casino / total) * 100 : 0;
+
+  window.pieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Sportsbook', 'Casino'],
+      datasets: [{
+        data: [sportsbookPercentage, casinoPercentage],
+        backgroundColor: ['#36d1dc', '#5b86e5'],
+        borderWidth: 1,
+        borderColor: '#fff'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            color: '#ffffff',
+            font: { size: 12 }
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              let label = context.label || '';
+              if (label) {
+                label += ': ';
+              }
+              const value = context.parsed || 0;
+              return label + value.toFixed(1) + '%';
+            }
+          }
+        }
+      },
+      layout: {
+        padding: 10
+      },
+      aspectRatio: 1.5
+    }
+  });
+}
+
 function addToHistory(entry) {
   history.unshift(entry);
   if (history.length > 3) {
@@ -1313,6 +1408,10 @@ function loadHistoryEntry(index) {
   if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
     window.revenueChart.destroy();
     renderChart(entry.keywordData);
+  }
+  if (window.pieChart && typeof window.pieChart.destroy === 'function') {
+    window.pieChart.destroy();
+    updatePieChart();
   }
 
   visibility.forEach((_, i) => {
