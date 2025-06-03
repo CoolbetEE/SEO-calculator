@@ -404,8 +404,7 @@
       padding: 20px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       display: none;
-      width: 600px; /* Fixed width */
-      height: 400px; /* Fixed height, reduced for better visibility */
+      width: 100%;
     }
 
     .chart-title {
@@ -720,8 +719,7 @@
       </div>
       <p class="subtitle">by <span>Edvard Kingissepp</span></p>
       <p class="description">
-        Calculate potential revenue from ranking for a specific keyword in your target market. 
-        Get insights into traffic, conversions, and revenue based on your selected position.
+        Calculate potential revenue from ranking for a specific keyword in your target market.
       </p>
     </div>
 
@@ -729,19 +727,7 @@
       <div class="input-section">
         <div class="info-box">
           <h3>💡 How it works</h3>
-          <p>Enter your target keyword, search volume, and market to see revenue projections across all search positions. Results are based on market-specific conversion rates and revenue metrics.</p>
-        </div>
-
-        <div class="form-group">
-          <label>🎯 Target Keyword</label>
-          <input type="text" id="keyword" placeholder="e.g., buy running shoes online">
-          <div class="input-help">Enter the keyword you want to rank for</div>
-        </div>
-
-        <div class="form-group">
-          <label>📊 Monthly Search Volume</label>
-          <input type="number" id="volume" placeholder="e.g., 10000" min="1">
-          <div class="input-help">How many times per month people search for this keyword</div>
+          <p>Enter your target keyword, search volume, and market to see revenue projections across all search positions.</p>
         </div>
 
         <div class="form-group">
@@ -772,6 +758,16 @@
             <option value="turnover">Turnover</option>
           </select>
           <div class="input-help">Choose between net gaming revenue or turnover calculations</div>
+        </div>
+
+        <div class="form-group">
+          <label>🔍 Keyword</label>
+          <input type="text" id="keyword" placeholder="e.g., buy running shoes online" required>
+        </div>
+
+        <div class="form-group">
+          <label>📈 Monthly Search Volume</label>
+          <input type="number" id="volume" placeholder="e.g., 10000" min="1" required>
         </div>
 
         <button class="calculate-btn" onclick="calculateRevenue()">
@@ -834,7 +830,7 @@ const data = {
   SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 },
   EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
   CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
-  CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
+  CL: { ngr: 27.54, turnout: 531.64, cr: 0.03 },
   EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
   IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
   MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
@@ -869,7 +865,7 @@ function toggleDarkMode() {
   document.body.classList.toggle("dark-mode");
   if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
     window.revenueChart.destroy();
-    renderChart(window.lastRevenues || []);
+    renderChart(window.lastKeywordData || {});
   }
 }
 
@@ -895,21 +891,16 @@ function animateCounter(element, end, duration = 1000) {
 }
 
 function validateInputs() {
-  const volume = parseFloat(document.getElementById('volume').value);
   const keyword = document.getElementById('keyword').value.trim();
+  const volume = parseFloat(document.getElementById('volume').value);
   
   if (!keyword) {
-    alert('⚠️ Please enter a target keyword');
+    alert('⚠️ Please enter a keyword');
     return false;
   }
   
-  if (isNaN(volume) || volume <= 0) {
-    alert('⚠️ Please enter a valid search volume (must be greater than 0)');
-    return false;
-  }
-  
-  if (volume > 10000000) {
-    alert('⚠️ Search volume seems too high. Please verify the number.');
+  if (isNaN(volume) || volume <= 0 || volume > 10000000) {
+    alert('⚠️ Please enter a valid search volume (must be greater than 0 and less than 10,000,000)');
     return false;
   }
   
@@ -928,14 +919,14 @@ function showTab(tab) {
     quarterlyOutput.style.display = 'none';
     if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
       window.revenueChart.destroy();
-      renderChart(window.lastMonthlyRevenues);
+      renderChart(window.lastKeywordData);
     }
   } else {
     monthlyOutput.style.display = 'none';
     quarterlyOutput.style.display = 'block';
     if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
       window.revenueChart.destroy();
-      renderChart(window.lastQuarterlyRevenues);
+      renderChart(window.lastKeywordData, true);
     }
   }
 }
@@ -943,11 +934,10 @@ function showTab(tab) {
 function calculateRevenue() {
   if (!validateInputs()) return;
   
+  const keyword = document.getElementById('keyword').value.trim();
   const volume = parseFloat(document.getElementById('volume').value);
   const market = document.getElementById('market').value;
   const valueType = document.getElementById('valueType').value;
-  const keyword = document.getElementById('keyword').value.trim();
-
   const { cr, ngr, turnover } = data[market];
   const aov = Math.abs(valueType === 'ngr' ? ngr : turnover);
 
@@ -971,7 +961,7 @@ function calculateRevenue() {
     const infoHtml = `
       <div class="info-box">
         <h3>📊 Results for "${keyword}"</h3>
-        <p>Market: ${marketNames[market]} • Volume: ${volume.toLocaleString()}/month • Metric: ${valueType.toUpperCase()}</p>
+        <p>Market: ${marketNames[market]} • Metric: ${valueType.toUpperCase()}</p>
       </div>
     `;
 
@@ -1054,16 +1044,16 @@ function calculateRevenue() {
       animateCounter(document.getElementById(`quarterly-revenue-${index}`), quarterlyRevenues[index]);
     });
 
+    const keywordData = { keyword, volume };
+    window.lastKeywordData = keywordData;
     window.lastMonthlyRevenues = monthlyRevenues;
     window.lastQuarterlyRevenues = quarterlyRevenues;
-    window.lastRevenues = monthlyRevenues;
-    renderChart(monthlyRevenues);
+    renderChart(keywordData);
 
     addToHistory({
-      keyword,
       market,
-      volume,
       valueType,
+      keywordData,
       monthlyRevenues,
       quarterlyRevenues,
       monthlyHtml,
@@ -1072,91 +1062,50 @@ function calculateRevenue() {
   }, 1500);
 }
 
-function renderChart(revenues) {
+function renderChart(keywordData, isQuarterly = false) {
   const ctx = document.getElementById('revenueChart').getContext('2d');
   if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
     window.revenueChart.destroy();
   }
 
-  const isDarkMode = document.body.classList.contains('dark-mode');
   const labels = visibility.map(item => item.label);
-  const chartValues = labels.map((label, index) => Math.max(0, revenues[index]));
+  const revenues = isQuarterly ? window.lastQuarterlyRevenues : window.lastMonthlyRevenues;
+
+  const dataset = {
+    label: 'Estimated Revenue (€)',
+    data: revenues,
+    backgroundColor: 'rgba(0, 123, 255, 0.6)',
+    borderRadius: 6
+  };
 
   window.revenueChart = new Chart(ctx, {
-    type: 'line',
+    type: 'bar',
     data: {
       labels: labels,
-      datasets: [{
-        label: 'Estimated Revenue (€)',
-        data: chartValues,
-        borderColor: isDarkMode ? '#5b86e5' : '#1e90ff',
-        backgroundColor: isDarkMode ? 'rgba(91, 134, 229, 0.2)' : 'rgba(30, 144, 255, 0.2)',
-        borderWidth: 2,
-        fill: true,
-        tension: 0.3,
-        pointBackgroundColor: isDarkMode ? '#5b86e5' : '#1e90ff',
-        pointBorderColor: '#ffffff',
-        pointBorderWidth: 2,
-        pointRadius: 5,
-        pointHoverRadius: 7
-      }]
+      datasets: [dataset]
     },
     options: {
-      responsive: false,
-      maintainAspectRatio: false,
+      responsive: true,
+      maintainAspectRatio: true,
       plugins: {
-        legend: { display: false },
-        tooltip: {
-          backgroundColor: isDarkMode ? 'rgba(44, 44, 46, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-          titleColor: isDarkMode ? '#f2f2f7' : '#1d1d1f',
-          bodyColor: isDarkMode ? '#f2f2f7' : '#1d1d1f',
-          borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
-          borderWidth: 1,
-          cornerRadius: 6,
-          padding: 8,
-          titleFont: { size: 12 },
-          bodyFont: { size: 12 },
-          callbacks: {
-            label: function(context) {
-              return `Revenue: €${context.parsed.y.toLocaleString()}`;
-            }
-          }
-        }
+        legend: { display: false }
       },
       scales: {
         y: {
           beginAtZero: true,
-          max: 50000,
           ticks: {
-            stepSize: 10000,
-            callback: value => '€' + value.toLocaleString(),
-            color: isDarkMode ? '#b0b0b5' : '#86868b',
-            font: { size: 12, weight: 'bold' }
-          },
-          grid: {
-            color: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-            drawBorder: false,
-            lineWidth: 1
+            callback: value => '€' + value.toLocaleString()
           }
         },
         x: {
           ticks: {
-            color: isDarkMode ? '#b0b0b5' : '#86868b',
-            font: { size: 12, weight: 'bold' },
             maxRotation: 0,
             minRotation: 0
-          },
-          grid: { display: false }
+          }
         }
-      },
-      layout: {
-        padding: { left: 20, right: 20, top: 10, bottom: 10 }
       }
     }
   });
-
-  document.getElementById('revenueChart').style.width = '600px';
-  document.getElementById('revenueChart').style.height = '400px';
 }
 
 function addToHistory(entry) {
@@ -1175,7 +1124,7 @@ function updateHistoryDisplay() {
     const historyItem = document.createElement('div');
     historyItem.className = 'history-item';
     historyItem.innerHTML = `
-      <p>Keyword: ${entry.keyword} • Market: ${marketNames[entry.market]} • Volume: ${entry.volume.toLocaleString()}/month • Metric: ${entry.valueType.toUpperCase()}</p>
+      <p>Market: ${marketNames[entry.market]} • Metric: ${entry.valueType.toUpperCase()} • Keyword: ${entry.keywordData.keyword}</p>
     `;
     historyItem.onclick = () => loadHistoryEntry(index);
     historyList.appendChild(historyItem);
@@ -1191,8 +1140,8 @@ function loadHistoryEntry(index) {
 
   const infoHtml = `
     <div class="info-box">
-      <h3>📊 Results for "${entry.keyword}"</h3>
-      <p>Market: ${marketNames[entry.market]} • Volume: ${entry.volume.toLocaleString()}/month • Metric: ${entry.valueType.toUpperCase()}</p>
+      <h3>📊 Results for "${entry.keywordData.keyword}"</h3>
+      <p>Market: ${marketNames[entry.market]} • Metric: ${entry.valueType.toUpperCase()}</p>
     </div>
   `;
 
@@ -1205,19 +1154,19 @@ function loadHistoryEntry(index) {
   document.getElementById("monthlyOutput").style.display = "block";
   document.getElementById("quarterlyOutput").style.display = "none";
 
+  window.lastKeywordData = entry.keywordData;
   window.lastMonthlyRevenues = entry.monthlyRevenues;
   window.lastQuarterlyRevenues = entry.quarterlyRevenues;
-  window.lastRevenues = entry.monthlyRevenues;
   if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
     window.revenueChart.destroy();
-    renderChart(entry.monthlyRevenues);
+    renderChart(entry.keywordData);
   }
 
   visibility.forEach((_, i) => {
-    animateCounter(document.getElementById(`monthly-traffic-${i}`), entry.monthlyRevenues[i] / (Math.abs(data[entry.market][entry.valueType]) > 0 ? Math.abs(data[entry.market][entry.valueType]) : 1) * visibility[i].ctr * entry.volume);
+    animateCounter(document.getElementById(`monthly-traffic-${i}`), entry.monthlyRevenues[i] / (Math.abs(data[entry.market][entry.valueType]) > 0 ? Math.abs(data[entry.market][entry.valueType]) : 1) * visibility[i].ctr * entry.keywordData.volume);
     animateCounter(document.getElementById(`monthly-conversions-${i}`), entry.monthlyRevenues[i] / (Math.abs(data[entry.market][entry.valueType]) > 0 ? Math.abs(data[entry.market][entry.valueType]) : 1));
     animateCounter(document.getElementById(`monthly-revenue-${i}`), entry.monthlyRevenues[i]);
-    animateCounter(document.getElementById(`quarterly-traffic-${i}`), entry.quarterlyRevenues[i] / (Math.abs(data[entry.market][entry.valueType]) > 0 ? Math.abs(data[entry.market][entry.valueType]) : 1) * visibility[i].ctr * entry.volume * 3);
+    animateCounter(document.getElementById(`quarterly-traffic-${i}`), entry.quarterlyRevenues[i] / (Math.abs(data[entry.market][entry.valueType]) > 0 ? Math.abs(data[entry.market][entry.valueType]) : 1) * visibility[i].ctr * entry.keywordData.volume * 3);
     animateCounter(document.getElementById(`quarterly-conversions-${i}`), entry.quarterlyRevenues[i] / (Math.abs(data[entry.market][entry.valueType]) > 0 ? Math.abs(data[entry.market][entry.valueType]) : 1));
     animateCounter(document.getElementById(`quarterly-revenue-${i}`), entry.quarterlyRevenues[i]);
   });
@@ -1230,18 +1179,17 @@ function exportToCSV() {
     return;
   }
   
-  const keyword = document.getElementById('keyword').value || 'Unknown';
-  const volume = document.getElementById('volume').value;
   const market = document.getElementById('market').value;
   const valueType = document.getElementById('valueType').value;
   const marketName = marketNames[market];
+  const keyword = document.getElementById('keyword').value || 'Unknown';
+  const volume = document.getElementById('volume').value || 'N/A';
   
   let csvContent = `SEO Revenue Calculator Results\n`;
   csvContent += `Generated: ${new Date().toLocaleDateString()}\n`;
-  csvContent += `Keyword: "${keyword}"\n`;
-  csvContent += `Monthly Search Volume: ${volume}\n`;
-  csvContent += `Target Market: ${marketName} (${market})\n`;
-  csvContent += `Revenue Type: ${valueType.toUpperCase()}\n\n`;
+  csvContent += `Market: ${marketName} (${market})\n`;
+  csvContent += `Revenue Type: ${valueType.toUpperCase()}\n`;
+  csvContent += `Keyword: ${keyword} (${volume})\n\n`;
   csvContent += `Period,Position,CTR (%),Traffic,Conversions,Revenue (€)\n`;
 
   const monthlyOutput = document.getElementById('monthlyOutput');
@@ -1265,7 +1213,7 @@ function exportToCSV() {
 
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement("a");
-  const filename = `seo_revenue_${keyword.replace(/[^a-zA-Z0-9]/g, '_')}_${market}.csv`;
+  const filename = `seo_revenue_${market}_${new Date().toISOString().split('T')[0]}.csv`;
   link.setAttribute("href", URL.createObjectURL(blob));
   link.setAttribute("download", filename);
   link.style.display = "none";
