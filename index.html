@@ -6,7 +6,7 @@
   <title>SEO Revenue Calculator</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
+   
     * {
       margin: 0;
       padding: 0;
@@ -775,7 +775,7 @@
         <button class="calculate-btn" onclick="calculateRevenue()">
           📈 Calculate Revenue Potential
         </button>
-        
+       
         <div class="export-buttons">
           <button class="export-btn" onclick="exportToCSV()">
             📄 Export CSV
@@ -791,16 +791,20 @@
           <div class="spinner-icon">⏳</div>
           <div class="spinner-text">Analyzing market data and calculating projections...</div>
         </div>
-        
+       
         <div id="output">
           <div class="tabs">
             <div class="tab active" onclick="showTab('monthly')">Monthly</div>
             <div class="tab" onclick="showTab('quarterly')">Quarterly</div>
+            <div class="tab" onclick="showTab('casino')">Casino</div>
+            <div class="tab" onclick="showTab('sportsbook')">Sportsbook</div>
           </div>
           <div id="monthlyOutput"></div>
           <div id="quarterlyOutput"></div>
+          <div id="casinoOutput"></div>
+          <div id="sportsbookOutput"></div>
         </div>
-        
+       
         <div class="chart-container" id="chartContainer">
           <div class="chart-title">Revenue by Search Position</div>
           <canvas id="revenueChart"></canvas>
@@ -823,22 +827,22 @@ const flags = {
 };
 
 const marketNames = {
-  FI: "Finland", SE: "Sweden", EE: "Estonia", CA: "Canada", CL: "Chile", 
+  FI: "Finland", SE: "Sweden", EE: "Estonia", CA: "Canada", CL: "Chile",
   EC: "Ecuador", IS: "Iceland", MX: "Mexico", NO: "Norway", ONT: "Ontario", PE: "Peru"
 };
 
 const data = {
-  FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05 },
-  SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05 },
-  EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05 },
-  CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04 },
-  CL: { ngr: 27.54, turnover: 531.64, cr: 0.03 },
-  EC: { ngr: 16.62, turnover: 484.91, cr: 0.03 },
-  IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05 },
-  MX: { ngr: 6.85, turnover: 497.3, cr: 0.03 },
-  NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05 },
-  ONT: { ngr: 80.48, turnover: 1865.69, cr: 0.04 },
-  PE: { ngr: 26.14, turnover: 443.48, cr: 0.03 }
+  FI: { ngr: 62.75, turnover: 1616.56, cr: 0.05, sportsbook_ngr: 27.56, casino_ngr: 31.92 },
+  SE: { ngr: 46.27, turnover: 1324.77, cr: 0.05, sportsbook_ngr: 9.95, casino_ngr: 27.4 },
+  EE: { ngr: 44.22, turnover: 1267.34, cr: 0.05, sportsbook_ngr: 6.17, casino_ngr: 35.16 },
+  CA: { ngr: 35.26, turnover: 2578.08, cr: 0.04, sportsbook_ngr: -3.03, casino_ngr: 35.9 },
+  CL: { ngr: 27.54, turnover: 531.64, cr: 0.03, sportsbook_ngr: 10.59, casino_ngr: 16.76 },
+  EC: { ngr: 16.62, turnover: 484.91, cr: 0.03, sportsbook_ngr: 12.39, casino_ngr: 3.77 },
+  IS: { ngr: 78.94, turnover: 1869.87, cr: 0.05, sportsbook_ngr: 25.05, casino_ngr: 49.35 },
+  MX: { ngr: 6.85, turnover: 497.3, cr: 0.03, sportsbook_ngr: -3.45, casino_ngr: 10.08 },
+  NO: { ngr: 117.41, turnover: 2757.3, cr: 0.05, sportsbook_ngr: 39.39, casino_ngr: 63.24 },
+  ONT: { ngr: 80.48, turnover: 1865.69, cr: 0.04, sportsbook_ngr: -113.66, casino_ngr: 19.64 },
+  PE: { ngr: 26.14, turnover: 443.48, cr: 0.03, sportsbook_ngr: -1.5, casino_ngr: 6.87 }
 };
 
 const visibility = [
@@ -857,7 +861,7 @@ function setFlag() {
   const flagUrl = flags[market];
   const marketName = marketNames[market];
   const marketData = data[market];
-  
+ 
   document.getElementById('flagDisplay').innerHTML = `<img class="flag" src="${flagUrl}" alt="${market} flag">`;
   document.getElementById('marketInfo').textContent = `${marketName} • CR: ${(marketData.cr * 100).toFixed(1)}%`;
 }
@@ -881,7 +885,7 @@ function toggleDarkMode() {
   document.body.classList.toggle("light-mode");
   const toggleLabel = document.getElementById('toggleLabel');
   toggleLabel.textContent = isDarkMode ? "Dark mode" : "Light mode";
-  
+ 
   updateSelectStyles(isDarkMode);
 
   if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
@@ -893,7 +897,7 @@ function toggleDarkMode() {
 function animateCounter(element, end, duration = 1000) {
   let start = 0;
   const increment = end / (duration / 16);
-  
+ 
   function update() {
     start += increment;
     if (start >= end) {
@@ -914,57 +918,79 @@ function animateCounter(element, end, duration = 1000) {
 function validateInputs() {
   const keyword = document.getElementById('keyword').value.trim();
   const volume = parseFloat(document.getElementById('volume').value);
-  
+ 
   if (!keyword) {
     alert('⚠️ Please enter a keyword');
     return false;
   }
-  
+ 
   if (isNaN(volume) || volume <= 0 || volume > 10000000) {
     alert('⚠️ Please enter a valid search volume (must be greater than 0 and less than 10,000,000)');
     return false;
   }
-  
+ 
   return true;
 }
 
 function showTab(tab) {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
   document.querySelector(`.tab[onclick="showTab('${tab}')"]`).classList.add('active');
-  
+ 
   const monthlyOutput = document.getElementById('monthlyOutput');
   const quarterlyOutput = document.getElementById('quarterlyOutput');
-  
+  const casinoOutput = document.getElementById('casinoOutput');
+  const sportsbookOutput = document.getElementById('sportsbookOutput');
+ 
+  monthlyOutput.style.display = 'none';
+  quarterlyOutput.style.display = 'none';
+  casinoOutput.style.display = 'none';
+  sportsbookOutput.style.display = 'none';
+
   if (tab === 'monthly') {
     monthlyOutput.style.display = 'block';
-    quarterlyOutput.style.display = 'none';
     if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
       window.revenueChart.destroy();
       renderChart(window.lastKeywordData);
     }
-  } else {
-    monthlyOutput.style.display = 'none';
+  } else if (tab === 'quarterly') {
     quarterlyOutput.style.display = 'block';
     if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
       window.revenueChart.destroy();
       renderChart(window.lastKeywordData, true);
+    }
+  } else if (tab === 'casino') {
+    casinoOutput.style.display = 'block';
+    if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
+      window.revenueChart.destroy();
+      renderChart(window.lastKeywordData, false, 'casino');
+    }
+  } else if (tab === 'sportsbook') {
+    sportsbookOutput.style.display = 'block';
+    if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
+      window.revenueChart.destroy();
+      renderChart(window.lastKeywordData, false, 'sportsbook');
     }
   }
 }
 
 function calculateRevenue() {
   if (!validateInputs()) return;
-  
+ 
   const keyword = document.getElementById('keyword').value.trim();
   const volume = parseFloat(document.getElementById('volume').value);
   const market = document.getElementById('market').value;
   const valueType = document.getElementById('valueType').value;
-  const { cr, ngr, turnover } = data[market];
-  const aov = Math.abs(valueType === 'ngr' ? ngr : turnover);
+  const marketData = data[market];
+  const aovTotal = Math.abs(valueType === 'ngr' ? marketData.ngr : marketData.turnover);
+  const aovSportsbook = Math.abs(valueType === 'ngr' ? marketData.sportsbook_ngr : marketData.turnover); // Using turnover as a proxy for sportsbook when NGR is negative
+  const aovCasino = Math.abs(valueType === 'ngr' ? marketData.casino_ngr : marketData.turnover); // Using turnover as a proxy for casino when NGR is negative
+  const cr = marketData.cr;
 
   const output = document.getElementById("output");
   const monthlyOutput = document.getElementById("monthlyOutput");
   const quarterlyOutput = document.getElementById("quarterlyOutput");
+  const casinoOutput = document.getElementById("casinoOutput");
+  const sportsbookOutput = document.getElementById("sportsbookOutput");
   const spinner = document.getElementById("spinner");
   const chartContainer = document.getElementById("chartContainer");
   const calculateBtn = document.querySelector('.calculate-btn');
@@ -978,6 +1004,10 @@ function calculateRevenue() {
   setTimeout(() => {
     const monthlyRevenues = [];
     const quarterlyRevenues = [];
+    const casinoMonthlyRevenues = [];
+    const sportsbookMonthlyRevenues = [];
+    const casinoQuarterlyRevenues = [];
+    const sportsbookQuarterlyRevenues = [];
 
     const infoHtml = `
       <div class="info-box">
@@ -988,17 +1018,29 @@ function calculateRevenue() {
 
     let monthlyHtml = '';
     let quarterlyHtml = '';
+    let casinoHtml = '';
+    let sportsbookHtml = '';
 
     visibility.forEach(({ ctr, label, description }, index) => {
       const monthlyTraffic = Math.round(volume * ctr);
       const monthlyConv = Math.round(monthlyTraffic * cr);
-      const monthlyRev = aov > 0 ? Math.round(monthlyConv * aov) : 0;
+      const monthlyRev = aovTotal > 0 ? Math.round(monthlyConv * aovTotal) : 0;
       monthlyRevenues.push(monthlyRev);
 
       const quarterlyTraffic = monthlyTraffic * 3;
       const quarterlyConv = monthlyConv * 3;
-      const quarterlyRev = aov > 0 ? monthlyRev * 3 : 0;
+      const quarterlyRev = aovTotal > 0 ? monthlyRev * 3 : 0;
       quarterlyRevenues.push(quarterlyRev);
+
+      const casinoMonthlyRev = aovCasino > 0 ? Math.round(monthlyConv * aovCasino) : 0;
+      casinoMonthlyRevenues.push(casinoMonthlyRev);
+      const casinoQuarterlyRev = aovCasino > 0 ? casinoMonthlyRev * 3 : 0;
+      casinoQuarterlyRevenues.push(casinoQuarterlyRev);
+
+      const sportsbookMonthlyRev = aovSportsbook > 0 ? Math.round(monthlyConv * aovSportsbook) : 0;
+      sportsbookMonthlyRevenues.push(sportsbookMonthlyRev);
+      const sportsbookQuarterlyRev = aovSportsbook > 0 ? sportsbookMonthlyRev * 3 : 0;
+      sportsbookQuarterlyRevenues.push(sportsbookQuarterlyRev);
 
       monthlyHtml += `
         <div class="result-item" style="animation-delay: ${index * 0.1}s">
@@ -1041,17 +1083,63 @@ function calculateRevenue() {
           </div>
         </div>
       `;
+
+      casinoHtml += `
+        <div class="result-item" style="animation-delay: ${index * 0.1}s">
+          <div class="result-title">${label} - ${(ctr * 100).toFixed(1)}% CTR</div>
+          <div class="result-subtitle">${description} • ${monthlyTraffic.toLocaleString()} monthly visitors</div>
+          <div class="result-stats">
+            <div class="stat">
+              <div class="stat-label">Traffic</div>
+              <div class="stat-value" id="casino-traffic-${index}">${monthlyTraffic.toLocaleString()}</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Conversions</div>
+              <div class="stat-value" id="casino-conversions-${index}">${monthlyConv.toLocaleString()}</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Revenue</div>
+              <div class="stat-value" id="casino-revenue-${index}">0€</div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      sportsbookHtml += `
+        <div class="result-item" style="animation-delay: ${index * 0.1}s">
+          <div class="result-title">${label} - ${(ctr * 100).toFixed(1)}% CTR</div>
+          <div class="result-subtitle">${description} • ${monthlyTraffic.toLocaleString()} monthly visitors</div>
+          <div class="result-stats">
+            <div class="stat">
+              <div class="stat-label">Traffic</div>
+              <div class="stat-value" id="sportsbook-traffic-${index}">${monthlyTraffic.toLocaleString()}</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Conversions</div>
+              <div class="stat-value" id="sportsbook-conversions-${index}">${monthlyConv.toLocaleString()}</div>
+            </div>
+            <div class="stat">
+              <div class="stat-label">Revenue</div>
+              <div class="stat-value" id="sportsbook-revenue-${index}">0€</div>
+            </div>
+          </div>
+        </div>
+      `;
     });
 
-    output.innerHTML = infoHtml + '<div class="tabs"><div class="tab active" onclick="showTab(\'monthly\')">Monthly</div><div class="tab" onclick="showTab(\'quarterly\')">Quarterly</div></div><div id="monthlyOutput"></div><div id="quarterlyOutput"></div>';
+    output.innerHTML = infoHtml + '<div class="tabs"><div class="tab active" onclick="showTab(\'monthly\')">Monthly</div><div class="tab" onclick="showTab(\'quarterly\')">Quarterly</div><div class="tab" onclick="showTab(\'casino\')">Casino</div><div class="tab" onclick="showTab(\'sportsbook\')">Sportsbook</div></div><div id="monthlyOutput"></div><div id="quarterlyOutput"></div><div id="casinoOutput"></div><div id="sportsbookOutput"></div>';
     document.getElementById("monthlyOutput").innerHTML = monthlyHtml;
     document.getElementById("quarterlyOutput").innerHTML = quarterlyHtml;
+    document.getElementById("casinoOutput").innerHTML = casinoHtml;
+    document.getElementById("sportsbookOutput").innerHTML = sportsbookHtml;
 
     spinner.style.display = "none";
     output.style.display = "block";
     chartContainer.style.display = "block";
     document.getElementById("monthlyOutput").style.display = "block";
     document.getElementById("quarterlyOutput").style.display = "none";
+    document.getElementById("casinoOutput").style.display = "none";
+    document.getElementById("sportsbookOutput").style.display = "none";
 
     calculateBtn.disabled = false;
     calculateBtn.textContent = "📈 Calculate Revenue Potential";
@@ -1063,6 +1151,10 @@ function calculateRevenue() {
       const quarterlyTraffic = monthlyTraffic * 3;
       const quarterlyConv = monthlyConv * 3;
       const quarterlyRev = quarterlyRevenues[index];
+      const casinoMonthlyRev = casinoMonthlyRevenues[index];
+      const casinoQuarterlyRev = casinoQuarterlyRevenues[index];
+      const sportsbookMonthlyRev = sportsbookMonthlyRevenues[index];
+      const sportsbookQuarterlyRev = sportsbookQuarterlyRevenues[index];
 
       animateCounter(document.getElementById(`monthly-traffic-${index}`), monthlyTraffic);
       animateCounter(document.getElementById(`monthly-conversions-${index}`), monthlyConv);
@@ -1070,12 +1162,22 @@ function calculateRevenue() {
       animateCounter(document.getElementById(`quarterly-traffic-${index}`), quarterlyTraffic);
       animateCounter(document.getElementById(`quarterly-conversions-${index}`), quarterlyConv);
       animateCounter(document.getElementById(`quarterly-revenue-${index}`), quarterlyRev);
+      animateCounter(document.getElementById(`casino-traffic-${index}`), monthlyTraffic);
+      animateCounter(document.getElementById(`casino-conversions-${index}`), monthlyConv);
+      animateCounter(document.getElementById(`casino-revenue-${index}`), casinoMonthlyRev);
+      animateCounter(document.getElementById(`sportsbook-traffic-${index}`), monthlyTraffic);
+      animateCounter(document.getElementById(`sportsbook-conversions-${index}`), monthlyConv);
+      animateCounter(document.getElementById(`sportsbook-revenue-${index}`), sportsbookMonthlyRev);
     });
 
     const keywordData = { keyword, volume };
     window.lastKeywordData = keywordData;
     window.lastMonthlyRevenues = monthlyRevenues;
     window.lastQuarterlyRevenues = quarterlyRevenues;
+    window.lastCasinoMonthlyRevenues = casinoMonthlyRevenues;
+    window.lastSportsbookMonthlyRevenues = sportsbookMonthlyRevenues;
+    window.lastCasinoQuarterlyRevenues = casinoQuarterlyRevenues;
+    window.lastSportsbookQuarterlyRevenues = sportsbookQuarterlyRevenues;
     renderChart(keywordData);
 
     addToHistory({
@@ -1084,20 +1186,33 @@ function calculateRevenue() {
       keywordData,
       monthlyRevenues,
       quarterlyRevenues,
+      casinoMonthlyRevenues,
+      sportsbookMonthlyRevenues,
+      casinoQuarterlyRevenues,
+      sportsbookQuarterlyRevenues,
       monthlyHtml,
-      quarterlyHtml
+      quarterlyHtml,
+      casinoHtml,
+      sportsbookHtml
     });
   }, 1500);
 }
 
-function renderChart(keywordData, isQuarterly = false) {
+function renderChart(keywordData, isQuarterly = false, category = null) {
   const ctx = document.getElementById('revenueChart').getContext('2d');
   if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
     window.revenueChart.destroy();
   }
 
   const labels = visibility.map(item => item.label);
-  const revenues = isQuarterly ? window.lastQuarterlyRevenues : window.lastMonthlyRevenues;
+  let revenues;
+  if (category === 'casino') {
+    revenues = isQuarterly ? window.lastCasinoQuarterlyRevenues : window.lastCasinoMonthlyRevenues;
+  } else if (category === 'sportsbook') {
+    revenues = isQuarterly ? window.lastSportsbookQuarterlyRevenues : window.lastSportsbookMonthlyRevenues;
+  } else {
+    revenues = isQuarterly ? window.lastQuarterlyRevenues : window.lastMonthlyRevenues;
+  }
 
   const dataset = {
     label: 'Estimated Revenue (€)',
@@ -1164,6 +1279,8 @@ function loadHistoryEntry(index) {
   const output = document.getElementById("output");
   const monthlyOutput = document.getElementById("monthlyOutput");
   const quarterlyOutput = document.getElementById("quarterlyOutput");
+  const casinoOutput = document.getElementById("casinoOutput");
+  const sportsbookOutput = document.getElementById("sportsbookOutput");
   const chartContainer = document.getElementById("chartContainer");
 
   const infoHtml = `
@@ -1173,18 +1290,26 @@ function loadHistoryEntry(index) {
     </div>
   `;
 
-  output.innerHTML = infoHtml + '<div class="tabs"><div class="tab active" onclick="showTab(\'monthly\')">Monthly</div><div class="tab" onclick="showTab(\'quarterly\')">Quarterly</div></div><div id="monthlyOutput"></div><div id="quarterlyOutput"></div>';
+  output.innerHTML = infoHtml + '<div class="tabs"><div class="tab" onclick="showTab(\'monthly\')">Monthly</div><div class="tab" onclick="showTab(\'quarterly\')">Quarterly</div><div class="tab" onclick="showTab(\'casino\')">Casino</div><div class="tab" onclick="showTab(\'sportsbook\')">Sportsbook</div></div><div id="monthlyOutput"></div><div id="quarterlyOutput"></div><div id="casinoOutput"></div><div id="sportsbookOutput"></div>';
   document.getElementById("monthlyOutput").innerHTML = entry.monthlyHtml;
   document.getElementById("quarterlyOutput").innerHTML = entry.quarterlyHtml;
+  document.getElementById("casinoOutput").innerHTML = entry.casinoHtml;
+  document.getElementById("sportsbookOutput").innerHTML = entry.sportsbookHtml;
 
   output.style.display = "block";
   chartContainer.style.display = "block";
   document.getElementById("monthlyOutput").style.display = "block";
   document.getElementById("quarterlyOutput").style.display = "none";
+  document.getElementById("casinoOutput").style.display = "none";
+  document.getElementById("sportsbookOutput").style.display = "none";
 
   window.lastKeywordData = entry.keywordData;
   window.lastMonthlyRevenues = entry.monthlyRevenues;
   window.lastQuarterlyRevenues = entry.quarterlyRevenues;
+  window.lastCasinoMonthlyRevenues = entry.casinoMonthlyRevenues;
+  window.lastSportsbookMonthlyRevenues = entry.sportsbookMonthlyRevenues;
+  window.lastCasinoQuarterlyRevenues = entry.casinoQuarterlyRevenues;
+  window.lastSportsbookQuarterlyRevenues = entry.sportsbookQuarterlyRevenues;
   if (window.revenueChart && typeof window.revenueChart.destroy === 'function') {
     window.revenueChart.destroy();
     renderChart(entry.keywordData);
@@ -1197,6 +1322,10 @@ function loadHistoryEntry(index) {
     const quarterlyTraffic = monthlyTraffic * 3;
     const quarterlyConv = monthlyConv * 3;
     const quarterlyRev = entry.quarterlyRevenues[i];
+    const casinoMonthlyRev = entry.casinoMonthlyRevenues[i];
+    const casinoQuarterlyRev = entry.casinoQuarterlyRevenues[i];
+    const sportsbookMonthlyRev = entry.sportsbookMonthlyRevenues[i];
+    const sportsbookQuarterlyRev = entry.sportsbookQuarterlyRevenues[i];
 
     animateCounter(document.getElementById(`monthly-traffic-${i}`), monthlyTraffic);
     animateCounter(document.getElementById(`monthly-conversions-${i}`), monthlyConv);
@@ -1204,6 +1333,12 @@ function loadHistoryEntry(index) {
     animateCounter(document.getElementById(`quarterly-traffic-${i}`), quarterlyTraffic);
     animateCounter(document.getElementById(`quarterly-conversions-${i}`), quarterlyConv);
     animateCounter(document.getElementById(`quarterly-revenue-${i}`), quarterlyRev);
+    animateCounter(document.getElementById(`casino-traffic-${i}`), monthlyTraffic);
+    animateCounter(document.getElementById(`casino-conversions-${i}`), monthlyConv);
+    animateCounter(document.getElementById(`casino-revenue-${i}`), casinoMonthlyRev);
+    animateCounter(document.getElementById(`sportsbook-traffic-${i}`), monthlyTraffic);
+    animateCounter(document.getElementById(`sportsbook-conversions-${i}`), monthlyConv);
+    animateCounter(document.getElementById(`sportsbook-revenue-${i}`), sportsbookMonthlyRev);
   });
 }
 
@@ -1213,37 +1348,55 @@ function exportToCSV() {
     alert('⚠️ Please calculate revenue projections first');
     return;
   }
-  
+ 
   const market = document.getElementById('market').value;
   const valueType = document.getElementById('valueType').value;
   const marketName = marketNames[market];
   const keyword = document.getElementById('keyword').value || 'Unknown';
   const volume = document.getElementById('volume').value || 'N/A';
-  
+ 
   let csvContent = `SEO Revenue Calculator Results\n`;
   csvContent += `Generated: ${new Date().toLocaleDateString()}\n`;
   csvContent += `Market: ${marketName} (${market})\n`;
   csvContent += `Revenue Type: ${valueType.toUpperCase()}\n`;
   csvContent += `Keyword: ${keyword} (${volume})\n\n`;
-  csvContent += `Period,Position,CTR (%),Traffic,Conversions,Revenue (€)\n`;
+  csvContent += `Period,Category,Position,CTR (%),Traffic,Conversions,Revenue (€)\n`;
 
   const monthlyOutput = document.getElementById('monthlyOutput');
   const quarterlyOutput = document.getElementById('quarterlyOutput');
+  const casinoOutput = document.getElementById('casinoOutput');
+  const sportsbookOutput = document.getElementById('sportsbookOutput');
   const monthlyItems = monthlyOutput.querySelectorAll('.result-item');
   const quarterlyItems = quarterlyOutput.querySelectorAll('.result-item');
+  const casinoItems = casinoOutput.querySelectorAll('.result-item');
+  const sportsbookItems = sportsbookOutput.querySelectorAll('.result-item');
 
   monthlyItems.forEach((item, index) => {
     const title = item.querySelector('.result-title').textContent;
     const stats = item.querySelectorAll('.stat-value');
     const ctr = visibility[index].ctr * 100;
-    csvContent += `Monthly,${title},${ctr.toFixed(1)},${stats[0].textContent},${stats[1].textContent},${stats[2].textContent}\n`;
+    csvContent += `Monthly,Total,${title},${ctr.toFixed(1)},${stats[0].textContent},${stats[1].textContent},${stats[2].textContent}\n`;
   });
 
   quarterlyItems.forEach((item, index) => {
     const title = item.querySelector('.result-title').textContent;
     const stats = item.querySelectorAll('.stat-value');
     const ctr = visibility[index].ctr * 100;
-    csvContent += `Quarterly,${title},${ctr.toFixed(1)},${stats[0].textContent},${stats[1].textContent},${stats[2].textContent}\n`;
+    csvContent += `Quarterly,Total,${title},${ctr.toFixed(1)},${stats[0].textContent},${stats[1].textContent},${stats[2].textContent}\n`;
+  });
+
+  casinoItems.forEach((item, index) => {
+    const title = item.querySelector('.result-title').textContent;
+    const stats = item.querySelectorAll('.stat-value');
+    const ctr = visibility[index].ctr * 100;
+    csvContent += `Monthly,Casino,${title},${ctr.toFixed(1)},${stats[0].textContent},${stats[1].textContent},${stats[2].textContent}\n`;
+  });
+
+  sportsbookItems.forEach((item, index) => {
+    const title = item.querySelector('.result-title').textContent;
+    const stats = item.querySelectorAll('.stat-value');
+    const ctr = visibility[index].ctr * 100;
+    csvContent += `Monthly,Sportsbook,${title},${ctr.toFixed(1)},${stats[0].textContent},${stats[1].textContent},${stats[2].textContent}\n`;
   });
 
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -1260,10 +1413,10 @@ function exportToCSV() {
 document.addEventListener('DOMContentLoaded', function() {
   setFlag();
   updateSelectStyles(true); // Initial setup for dark mode
-  
+ 
   const volumeInput = document.getElementById('volume');
   const keywordInput = document.getElementById('keyword');
-  
+ 
   volumeInput.addEventListener('input', function() {
     const value = parseInt(this.value);
     if (value < 0) {
@@ -1275,13 +1428,13 @@ document.addEventListener('DOMContentLoaded', function() {
       this.style.borderColor = '';
     }
   });
-  
+ 
   keywordInput.addEventListener('input', function() {
     if (this.value.length > 100) {
       this.value = this.value.substring(0, 100);
     }
   });
-  
+ 
   [volumeInput, keywordInput].forEach(input => {
     input.addEventListener('keypress', function(e) {
       if (e.key === 'Enter') {
